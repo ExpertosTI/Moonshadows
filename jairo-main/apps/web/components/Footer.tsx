@@ -117,9 +117,28 @@ export function Footer() {
 
                 {/* Bottom */}
                 <div className="pt-8 border-t border-gray-800 flex flex-col md:flex-row items-center justify-between gap-4">
-                    <p className="text-gray-400 text-sm">
-                        © {currentYear} JairoApp. Todos los derechos reservados.
-                    </p>
+                    <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8">
+                        <p className="text-gray-400 text-sm">
+                            © {currentYear} JairoApp. Todos los derechos reservados.
+                        </p>
+                        
+                        <a 
+                            href="https://renace.tech" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 opacity-25 hover:opacity-100 transition-all duration-500 grayscale hover:grayscale-0"
+                        >
+                            <span className="text-[10px] font-bold tracking-[0.2em] text-gray-500 uppercase">
+                                Powered by
+                            </span>
+                            <img 
+                                src="/renace.svg" 
+                                alt="Renace" 
+                                className="h-3 w-auto invert"
+                            />
+                        </a>
+                    </div>
+
                     <div className="flex gap-6 text-sm">
                         {links.legal.map((link) => (
                             <Link
