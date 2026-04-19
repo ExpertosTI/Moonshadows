@@ -1,0 +1,33 @@
+services:
+  yoyas:
+    image: yoyas-makeup-school:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - RenaceNet
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: '0.10'
+          memory: 64M
+      labels:
+        - "traefik.enable=true"
+        # ── HTTPS ──────────────────────────────────────────────
+        - "traefik.http.routers.yoyas.rule=Host(`yoyas.renace.tech`)"
+        - "traefik.http.routers.yoyas.entrypoints=websecure"
+        - "traefik.http.routers.yoyas.tls=true"
+        - "traefik.http.routers.yoyas.tls.certresolver=letsencryptresolver"
+        - "traefik.http.services.yoyas.loadbalancer.server.port=80"
+        # ── HTTP → HTTPS redirect ──────────────────────────────
+        - "traefik.http.routers.yoyas-http.rule=Host(`yoyas.renace.tech`)"
+        - "traefik.http.routers.yoyas-http.entrypoints=web"
+        - "traefik.http.routers.yoyas-http.middlewares=redirect-to-https"
+        - "traefik.docker.network=RenaceNet"
+
+networks:
+  RenaceNet:
+    external: true

@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="yoyas — Formación profesional para docentes de maquillaje">
+    <meta name="theme-color" content="#1A1A1A">
+    <title>yoyas — Formación Docente</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-brand">
+        <img src="logo.png" alt="yoyas" class="brand-logo"
+             onerror="this.style.display='none';document.getElementById('brand-fallback').style.display='flex'">
+        <div id="brand-fallback" class="brand-fallback" style="display:none">
+            <span class="brand-script">yoyas</span>
+            <span class="brand-sub">MAKEUP SCHOOL</span>
+        </div>
+    </div>
+
+    <nav class="sidebar-nav">
+        <p class="nav-section-label">Programa</p>
+
+        <button class="nav-item active" onclick="showModule(0,this)" data-mod="0">
+            <span class="nav-dot"></span>
+            <span class="nav-num">01</span>
+            <span class="nav-text">Formación Docente</span>
+        </button>
+        <button class="nav-item" onclick="showModule(1,this)" data-mod="1">
+            <span class="nav-dot"></span>
+            <span class="nav-num">02</span>
+            <span class="nav-text">Psicología del Aula</span>
+        </button>
+        <button class="nav-item" onclick="showModule(2,this)" data-mod="2">
+            <span class="nav-dot"></span>
+            <span class="nav-num">03</span>
+            <span class="nav-text">Clases Memorables</span>
+        </button>
+
+        <div class="progress-track">
+            <div class="progress-bar" id="progressBar" style="width:33.3%"></div>
+        </div>
+    </nav>
+
+    <div class="sidebar-actions">
+        <button class="action-btn action-primary" onclick="descargarPDF()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Descargar PDF
+        </button>
+        <button class="action-btn action-secondary" onclick="toggleShare()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            Compartir
+        </button>
+
+        <div class="share-panel" id="sharePanel">
+            <a href="#" class="share-item" onclick="compartirWhatsApp(event)">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                WhatsApp
+            </a>
+            <a href="#" class="share-item" onclick="copiarEnlace(event)">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                Copiar enlace
+            </a>
+            <a href="#" class="share-item" onclick="compartirEmail(event)">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                Enviar por email
+            </a>
+        </div>
+    </div>
+
+    <div class="sidebar-footer">
+        <a href="https://renace.tech" target="_blank" class="renace-link">
+            <span>Powered by</span>
+            <img src="renace.svg" alt="Renace Logo" class="renace-logo">
+        </a>
+    </div>
+</aside>
+
+<!-- ═══ HAMBURGER ═══ -->
+<button class="hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Menú">
+    <span></span><span></span><span></span>
+</button>
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- ═══ MAIN ═══ -->
+<main class="main" id="main">
+
+<!-- ─── MODULE 0 ─── -->
+<article class="module active" id="mod-0">
+
+    <header class="mod-header">
+        <div class="mod-tag">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            Módulo 01
+        </div>
+        <h1 class="mod-title">Formación para<br><em>Maquilladora Docente</em></h1>
+        <p class="mod-sub">Programa de Desarrollo en Docencia de Maquillaje Profesional</p>
+        <div class="title-rule"></div>
+    </header>
+
+    <section class="content-section">
+        <h2 class="section-heading">
+            <span class="heading-accent"></span>Introducción
+        </h2>
+        <p>Ser maquilladora profesional implica dominar técnicas de belleza y estética. Sin embargo, ser docente de maquillaje requiere habilidades adicionales: no se trata únicamente de ejecutar técnicas correctamente, sino de transmitir ese conocimiento a otras personas de forma clara, estructurada y motivadora.</p>
+
+        <div class="three-pillars">
+            <div class="pillar-card">
+                <div class="pillar-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                </div>
+                <h3>Dominio técnico</h3>
+                <p>Conocimiento profundo de técnicas, productos, tipos de piel y tendencias actuales.</p>
+            </div>
+            <div class="pillar-card">
+                <div class="pillar-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                </div>
+                <h3>Capacidad pedagógica</h3>
+                <p>Habilidades para explicar procesos, guiar prácticas y evaluar el avance de cada alumna.</p>
+            </div>
+            <div class="pillar-card">
+                <div class="pillar-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                </div>
+                <h3>Conexión humana</h3>
+                <p>Capacidad de comprender emociones, inseguridades y expectativas de las estudiantes.</p>
+            </div>
+        </div>
+
+        <blockquote class="pull-quote">
+            "Una buena docente no solo enseña maquillaje, enseña seguridad, disciplina y amor por la profesión."
+        </blockquote>
+    </section>
+
+    <section class="content-section">
+        <h2 class="section-heading"><span class="heading-accent"></span>Perfil de la Docente</h2>
+
+        <h3 class="subsection-label">Dominio técnico</h3>
+        <p>La base de cualquier docente es su preparación técnica. La instructora debe dominar:</p>
+        <ul class="styled-list">
+            <li>Preparación correcta de la piel</li>
+            <li>Técnicas de base profesional</li>
+            <li>Correcciones faciales: luces y sombras</li>
+            <li>Teoría del color aplicada al maquillaje</li>
+            <li>Técnicas de ojos: difuminados, delineados, cortes de cuenca</li>
+            <li>Uso adecuado de brochas y herramientas</li>
+            <li>Conocimiento de productos cosméticos</li>
+        </ul>
+        <div class="insight-box">
+            <svg class="insight-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <p>Una docente debe ser capaz de explicar el <strong>porqué</strong> de cada técnica, no solo mostrar cómo se hace.</p>
+        </div>
+
+        <h3 class="subsection-label">Habilidades humanas</h3>
+        <ul class="styled-list">
+            <li>Empatía para comprender a sus estudiantes</li>
+            <li>Paciencia para explicar varias veces una técnica</li>
+            <li>Liderazgo para dirigir el grupo</li>
+            <li>Comunicación clara para evitar confusiones</li>
+        </ul>
+        <div class="insight-box">
+            <svg class="insight-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <p>Las alumnas no solo aprenden maquillaje; aprenden cómo <strong>comportarse como profesionales</strong>.</p>
+        </div>
+    </section>
+
+    <section class="content-section">
+        <h2 class="section-heading"><span class="heading-accent"></span>Estructura de una Clase</h2>
+        <p>Una clase bien estructurada permite que el aprendizaje sea más claro, dinámico y efectivo.</p>
+        <div class="steps-timeline">
+            <div class="timeline-step">
+                <div class="ts-marker"><span>01</span></div>
+                <div class="ts-body">
+                    <h4>Bienvenida</h4>
+                    <p>Crea conexión con el grupo. Un ambiente cómodo predispone a aprender mejor.</p>
+                </div>
+            </div>
+            <div class="timeline-step">
+                <div class="ts-marker"><span>02</span></div>
+                <div class="ts-body">
+                    <h4>Introducción del tema</h4>
+                    <p>Explica el objetivo de la clase. Muestra referencias visuales para despertar interés.</p>
+                </div>
+            </div>
+            <div class="timeline-step">
+                <div class="ts-marker"><span>03</span></div>
+                <div class="ts-body">
+                    <h4>Demostración</h4>
+                    <p>Realiza el maquillaje paso a paso mientras explicas el motivo de cada movimiento.</p>
+                </div>
+            </div>
+            <div class="timeline-step">
+                <div class="ts-marker"><span>04</span></div>
+                <div class="ts-body">
+                    <h4>Práctica supervisada</h4>
+                    <p>Las alumnas replican la técnica. Recorre el aula observando y guiando de cerca.</p>
+                </div>
+            </div>
+            <div class="timeline-step">
+                <div class="ts-marker"><span>05</span></div>
+                <div class="ts-body">
+                    <h4>Corrección y retroalimentación</h4>
+                    <p>Ayuda a mejorar los resultados con respeto, claridad e inteligencia emocional.</p>
+                </div>
+            </div>
+            <div class="timeline-step">
+                <div class="ts-marker"><span>06</span></div>
+                <div class="ts-body">
+                    <h4>Cierre</h4>
+                    <p>Repasa los puntos clave y abre un espacio genuino para preguntas del grupo.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section">
+        <h2 class="section-heading"><span class="heading-accent"></span>Método de Enseñanza</h2>
+        <div class="method-flow">
+            <div class="method-node">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                Explicar
+            </div>
+            <svg class="flow-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            <div class="method-node">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+                Mostrar
+            </div>
+            <svg class="flow-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            <div class="method-node">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.5 10c-.83 0-1.5-.67-1.5-1.5v-5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5z"/><path d="M20.5 10H19V8.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/><path d="M9.5 14c.83 0 1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5S8 21.33 8 20.5v-5c0-.83.67-1.5 1.5-1.5z"/><path d="M3.5 14H5v1.5c0 .83-.67 1.5-1.5 1.5S2 16.33 2 15.5 2.67 14 3.5 14z"/><path d="M14 14.5c0-.83.67-1.5 1.5-1.5h5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-5c-.83 0-1.5-.67-1.5-1.5z"/><path d="M15.5 19H14v1.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z"/><path d="M10 9.5C10 8.67 9.33 8 8.5 8h-5C2.67 8 2 8.67 2 9.5S2.67 11 3.5 11h5c.83 0 1.5-.67 1.5-1.5z"/><path d="M8.5 5H10V3.5C10 2.67 9.33 2 8.5 2S7 2.67 7 3.5 7.67 5 8.5 5z"/></svg>
+                Practicar
+            </div>
+            <svg class="flow-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            <div class="method-node">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg>
+                Corregir
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section">
+        <h2 class="section-heading"><span class="heading-accent"></span>Tipos de Estudiantes</h2>
+        <div class="student-grid">
+            <div class="student-card">
+                <div class="student-icon" style="background:rgba(192,57,43,0.08)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                </div>
+                <h4>Alumna rápida</h4>
+                <p>Aprende con facilidad. <strong>Estrategia:</strong> desafíos adicionales para mantener su interés.</p>
+            </div>
+            <div class="student-card">
+                <div class="student-icon" style="background:rgba(184,132,154,0.1)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B8849A" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <h4>Alumna insegura</h4>
+                <p>Duda constantemente. <strong>Estrategia:</strong> acompañamiento cercano y refuerzo de confianza.</p>
+            </div>
+            <div class="student-card">
+                <div class="student-icon" style="background:rgba(26,26,26,0.06)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4A4A4A" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <h4>Alumna distraída</h4>
+                <p>Pierde concentración fácilmente. <strong>Estrategia:</strong> involucrarla activamente en las prácticas.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section">
+        <h2 class="section-heading"><span class="heading-accent"></span>Cómo Corregir sin Desmotivar</h2>
+        <div class="contrast-cards">
+            <div class="contrast-card contrast-avoid">
+                <div class="contrast-tag">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    Evitar
+                </div>
+                <p>"Esto está mal."</p>
+            </div>
+            <div class="contrast-card contrast-use">
+                <div class="contrast-tag">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    Decir
+                </div>
+                <p>"Vamos a mejorar esta parte para que el acabado quede más limpio."</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section closing-section">
+        <h2 class="section-heading"><span class="heading-accent"></span>Conclusión</h2>
+        <p>La docencia en maquillaje requiere preparación técnica, habilidades humanas y verdadera vocación por enseñar. Una maquilladora docente exitosa inspira confianza, disciplina y pasión por la profesión.</p>
+        <blockquote class="pull-quote">
+            "Cuando una docente logra conectar con sus alumnas, su enseñanza deja de ser una simple clase y se convierte en una experiencia transformadora."
+        </blockquote>
+    </section>
+
+    <div class="mod-footer">
+        <button class="footer-btn footer-next" onclick="showModule(1,null)">
+            Módulo 02: Psicología del Aula
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+    </div>
+</article>
+
+<!-- ─── MODULE 1 ─── -->
+<article class="module" id="mod-1">
+
+    <header class="mod-header">
+        <div class="mod-tag">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            Módulo 02
+        </div>
+        <h1 class="mod-title">Psicología del<br><em>Aula de Belleza</em></h1>
+        <p class="mod-sub">Cómo leer a tus alumnas y crear un ambiente de aprendizaje positivo</p>
+        <div class="title-rule"></div>
+    </header>
+
+    <section class="content-section">
+        <h2 class="section-heading"><span class="heading-accent"></span>Introducción</h2>
+        <p>El aula de maquillaje no es solo un espacio para aprender técnicas. También es un lugar donde las estudiantes viven emociones que pueden frenar su aprendizaje:</p>
+        <div class="emotion-grid">
+            <div class="emotion-chip">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Inseguridad
+            </div>
+            <div class="emotion-chip">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Miedo a equivocarse
+            </div>
+            <div class="emotion-chip">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                Comparación
+            </div>
+            <div class="emotion-chip">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>
+                Falta de confianza
+            </div>
+        </div>
+        <blockquote class="pull-quote">
+            "Una docente que entiende la psicología del aula no solo enseña maquillaje, forma personas seguras de sí mismas."
+        </blockquote>
+    </section>
+
+    <section class="content-section">
+        <h2 class="section-heading"><span class="heading-accent"></span>Emociones más comunes</h2>
+
+        <div class="emotion-cards">
+            <div class="emotion-detail-card">
+                <div class="edc-header">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B8849A" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <h4>Inseguridad</h4>
+                </div>
+                <p>Señales frecuentes:</p>
+                <ul class="styled-list small">
+                    <li>"A mí nunca me queda igual."</li>
+                    <li>"Yo no soy tan buena como las demás."</li>
+                </ul>
+                <div class="response-quote">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>
+                    "Todas estamos aprendiendo. Cada práctica te hará mejorar."
+                </div>
+            </div>
+
+            <div class="emotion-detail-card">
+                <div class="edc-header">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C0392B" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    <h4>Miedo al error</h4>
+                </div>
+                <p>El error puede bloquear el aprendizaje. La docente debe recordar constantemente:</p>
+                <div class="response-quote">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>
+                    "En maquillaje, cada error es una oportunidad para aprender algo nuevo."
+                </div>
+            </div>
+
+            <div class="emotion-detail-card">
+                <div class="edc-header">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4A4A4A" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                    <h4>Comparación</h4>
+                </div>
+                <p>Enseña que cada persona tiene su propio ritmo de aprendizaje. La competencia interna daña la cohesión del grupo y limita el progreso individual.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section">
+        <h2 class="section-heading"><span class="heading-accent"></span>Leer el Lenguaje Corporal</h2>
+        <div class="body-lang-grid">
+            <div class="bl-card">
+                <div class="bl-type">Alumna silenciosa</div>
+                <p>Puede indicar timidez, inseguridad o miedo a preguntar.</p>
+                <div class="response-quote">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>
+                    "¿Cómo te está quedando la técnica?"
+                </div>
+            </div>
+            <div class="bl-card">
+                <div class="bl-type">Alumna frustrada</div>
+                <p>Suspira, borra el maquillaje repetidamente, se muestra tensa o ansiosa.</p>
+                <div class="response-quote">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>
+                    "Déjame mostrarte una forma más fácil de hacerlo."
+                </div>
+            </div>
+            <div class="bl-card">
+                <div class="bl-type">Alumna desmotivada</div>
+                <p>Trabaja sin entusiasmo, se distrae con facilidad y participa poco.</p>
+                <div class="response-quote">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>
+                    Ofrécele pequeños retos o reconocimiento público.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section">
+        <h2 class="section-heading"><span class="heading-accent"></span>Técnicas de Motivación</h2>
+        <div class="steps-timeline">
+            <div class="timeline-step">
+                <div class="ts-marker"><span>01</span></div>
+                <div class="ts-body">
+                    <h4>Reconocer el progreso</h4>
+                    <p>"Tu difuminado hoy está mucho mejor que la semana pasada."</p>
+                </div>
+            </div>
+            <div class="timeline-step">
+                <div class="ts-marker"><span>02</span></div>
+                <div class="ts-body">
+                    <h4>Mostrar avances con fotos</h4>
+                    <p>Fotografía el trabajo de las alumnas para que vean su propia evolución.</p>
+                </div>
+            </div>
+            <div class="timeline-step">
+                <div class="ts-marker"><span>03</span></div>
+                <div class="ts-body">
+                    <h4>Dar pequeños desafíos</h4>
+                    <p>"Hoy vamos a intentar un difuminado más intenso." Los retos mantienen el interés.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section closing-section">
+        <h2 class="section-heading"><span class="heading-accent"></span>Conclusión</h2>
+        <p>Comprender la psicología del aula permite desarrollar clases más humanas, motivadoras y efectivas. Cuando una docente aprende a leer a sus alumnas, puede detectar inseguridades, motivar el aprendizaje y fortalecer la confianza del grupo.</p>
+        <blockquote class="pull-quote">
+            "En la enseñanza del maquillaje, la técnica es importante, pero la conexión humana es lo que realmente transforma la experiencia educativa."
+        </blockquote>
+    </section>
+
+    <div class="mod-footer">
+        <button class="footer-btn footer-prev" onclick="showModule(0,null)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            Módulo 01
+        </button>
+        <button class="footer-btn footer-next" onclick="showModule(2,null)">
+            Módulo 03: Clases Memorables
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+    </div>
+</article>
+
+<!-- ─── MODULE 2 ─── -->
+<article class="module" id="mod-2">
+
+    <header class="mod-header">
+        <div class="mod-tag">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            Módulo 03
+        </div>
+        <h1 class="mod-title">Clases que las Alumnas<br><em>Nunca Olvidan</em></h1>
+        <p class="mod-sub">Cómo crear experiencias de aprendizaje memorables e inspiradoras</p>
+        <div class="title-rule"></div>
+    </header>
+
+    <section class="content-section">
+        <h2 class="section-heading"><span class="heading-accent"></span>La Experiencia de Aprendizaje</h2>
+        <p>Una gran clase de maquillaje no se recuerda solo por la técnica aprendida, sino por <strong>cómo se sintieron las alumnas</strong> durante el proceso.</p>
+        <div class="experience-formula">
+            <div class="ef-node">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                Técnica
+            </div>
+            <span class="ef-plus">+</span>
+            <div class="ef-node">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                Emoción
+            </div>
+            <span class="ef-plus">+</span>
+            <div class="ef-node">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                Inspiración
+            </div>
+            <span class="ef-plus">+</span>
+            <div class="ef-node">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Práctica
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section">
+        <h2 class="section-heading"><span class="heading-accent"></span>Crear Expectativa</h2>
+        <p>Las mejores docentes preparan el ambiente antes de comenzar.</p>
+        <div class="insight-box">
+            <svg class="insight-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+            <p>"Hoy vamos a aprender una técnica que puede cambiar completamente la forma en que maquillan ojos."</p>
+        </div>
+        <p>También puedes mostrar: una fotografía del resultado final, un ejemplo en modelo, o un maquillaje terminado.</p>
+    </section>
+
+    <section class="content-section">
+        <h2 class="section-heading"><span class="heading-accent"></span>La Demostración Impactante</h2>
+        <ul class="styled-list">
+            <li>Trabaja con movimientos claros y pausados</li>
+            <li>Explica cada paso con calma</li>
+            <li>Permite que las alumnas vean de cerca la técnica</li>
+            <li>Explica por qué elegiste ese producto</li>
+            <li>Señala los errores comunes en esa técnica</li>
+            <li>Muestra cómo lograr un mejor acabado</li>
+        </ul>
+        <div class="insight-box">
+            <svg class="insight-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <p>Las mejores docentes convierten la demostración en una <strong>historia de aprendizaje</strong>, no solo en una ejecución técnica.</p>
+        </div>
+    </section>
+
+    <section class="content-section">
+        <h2 class="section-heading"><span class="heading-accent"></span>El Refuerzo Positivo</h2>
+        <p>Cuando una alumna recibe reconocimiento por su esfuerzo, su motivación aumenta exponencialmente:</p>
+        <ul class="styled-list">
+            <li>"Tu difuminado está mejorando mucho."</li>
+            <li>"La forma de ceja que hiciste está muy bien lograda."</li>
+            <li>"Este detalle te quedó muy profesional."</li>
+        </ul>
+        <div class="contrast-cards">
+            <div class="contrast-card contrast-avoid">
+                <div class="contrast-tag">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    Evitar
+                </div>
+                <p>"Este delineado está mal."</p>
+            </div>
+            <div class="contrast-card contrast-use">
+                <div class="contrast-tag">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    Decir
+                </div>
+                <p>"Este delineado se puede mejorar con este pequeño ajuste."</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section">
+        <h2 class="section-heading"><span class="heading-accent"></span>Contar Experiencias Reales</h2>
+        <p>Las historias conectan emocionalmente. Comparte experiencias como:</p>
+        <ul class="styled-list">
+            <li>Trabajos reales con clientes</li>
+            <li>Errores cometidos al inicio de tu carrera</li>
+            <li>Situaciones reales del mundo profesional del maquillaje</li>
+        </ul>
+        <p>Esto hace que la clase se sienta más <strong>humana y auténtica</strong>.</p>
+    </section>
+
+    <section class="content-section">
+        <h2 class="section-heading"><span class="heading-accent"></span>El Cierre Perfecto</h2>
+        <div class="insight-box">
+            <svg class="insight-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <p>"Hoy aprendimos una técnica que les permitirá lograr ojos más profundos y profesionales."</p>
+        </div>
+        <p>Pide a las alumnas que compartan qué fue lo que más les gustó, qué aprendieron y qué desean practicar más. Esto <strong>refuerza y consolida</strong> el aprendizaje.</p>
+    </section>
+
+    <section class="content-section closing-section">
+        <h2 class="section-heading"><span class="heading-accent"></span>El Impacto de una Docente Memorable</h2>
+        <p>Una docente inolvidable no se mide solo por su talento, sino por el impacto que tiene en sus estudiantes. Las mejores docentes inspiran confianza, motivan el crecimiento, enseñan con pasión y crean experiencias positivas de aprendizaje.</p>
+        <blockquote class="pull-quote">
+            "Cuando una docente logra esto, sus alumnas no solo recuerdan la técnica aprendida… recuerdan a la persona que las inspiró a creer en su talento."
+        </blockquote>
+    </section>
+
+    <div class="mod-footer">
+        <button class="footer-btn footer-prev" onclick="showModule(1,null)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            Módulo 02
+        </button>
+    </div>
+</article>
+
+</main>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
