@@ -9,12 +9,8 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 # Copiar assets estáticos
 COPY index.html style.css script.js /usr/share/nginx/html/
 
-# Copiar logo si existe (build no falla si está ausente)
-RUN mkdir -p /tmp/logobuild
-COPY logo.* /tmp/logobuild/ 2>/dev/null || true
-RUN if ls /tmp/logobuild/logo.* 1>/dev/null 2>&1; then \
-        cp /tmp/logobuild/logo.* /usr/share/nginx/html/; \
-    fi && rm -rf /tmp/logobuild
+# Copiar assets estáticos (incluyendo logos y svg)
+COPY index.html style.css script.js renace.svg logo.png /usr/share/nginx/html/
 
 RUN chown -R nginx:nginx /usr/share/nginx/html && \
     chmod -R 644 /usr/share/nginx/html/*
