@@ -270,35 +270,116 @@ export class ProductsService {
         return { message: 'Producto eliminado' };
     }
 
-    async getMyCatalog(token: string) {
-        const user = this.getUserFromToken(token);
-        const userCheck = await this.db.query('SELECT company_id FROM users WHERE id = $1', [user.id]);
 
-        if (!userCheck.rows[0]?.company_id) {
+    // --- V2 Methods (Using JwtAuthGuard) ---
+
+    async getMyCatalogV2(user: any) {
+        if (!user.companyId) {
             return { data: [], meta: { total: 0 } };
         }
 
-        const companyId = userCheck.rows[0].company_id;
         const result = await this.db.query(`
             SELECT p.*, cat.name as category_name
             FROM products p
             LEFT JOIN product_categories cat ON p.category_id = cat.id
             WHERE p.company_id = $1
             ORDER BY p.created_at DESC
-        `, [companyId]);
+        `, [user.companyId]);
 
         return { data: result.rows, meta: { total: result.rowCount } };
     }
 
-    async importProducts(token: string, products: any[]) {
-        const user = this.getUserFromToken(token);
-        const userCheck = await this.db.query('SELECT company_id FROM users WHERE id = $1', [user.id]);
+    async createProductV2(user: any, data: any) {
+        if (!user.companyId) {
+            throw new HttpException('Debes pertenecer a una empresa para publicar productos', HttpStatus.FORBIDDEN);
+        }
 
-        if (!userCheck.rows[0]?.company_id) {
+        try {
+            const result = await this.db.query(`
+                INSERT INTO products (
+                    company_id, name, description, sku, price, 
+                    min_order_qty, images, category_id, status
+                ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'active')
+                RETURNING *
+            `, [
+                user.companyId,
+                data.name,
+                data.description,
+                data.sku,
+                data.price || 0,
+                data.minOrderQty || 1,
+                data.images || [],
+                data.categoryId
+            ]);
+
+            return result.rows[0];
+        } catch (error) {
+            this.logger.error('Error creating product', error);
+            throw new HttpException('Error al crear producto', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    async updateProductV2(id: string, user: any, data: any) {
+        // Verificar propiedad
+        const check = await this.db.query(
+            'SELECT company_id FROM products WHERE id = $1',
+            [id]
+        );
+
+        if (check.rows.length === 0) {
+            throw new HttpException('Producto no encontrado', HttpStatus.NOT_FOUND);
+        }
+
+        if (user.companyId !== check.rows[0].company_id) {
+            throw new HttpException('No tienes permiso para editar este producto', HttpStatus.FORBIDDEN);
+        }
+
+        try {
+            const fields: string[] = [];
+            const values: any[] = [];
+            let idx = 1;
+
+            const allowed = ['name', 'description', 'price', 'sku', 'images', 'min_order_qty', 'status'];
+
+            for (const key of Object.keys(data)) {
+                if (allowed.includes(key)) {
+                    fields.push(`${key} = $${idx}`);
+                    values.push(data[key]);
+                    idx++;
+                }
+            }
+
+            if (fields.length === 0) return { message: 'Nada que actualizar' };
+
+            values.push(id);
+            const query = `UPDATE products SET ${fields.join(', ')}, updated_at = NOW() WHERE id = $${idx} RETURNING *`;
+
+            const result = await this.db.query(query, values);
+            return result.rows[0];
+        } catch (error) {
+            this.logger.error(`Error updating product ${id}`, error);
+            throw new HttpException('Error al actualizar producto', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    async deleteProductV2(id: string, user: any) {
+        const check = await this.db.query('SELECT company_id FROM products WHERE id = $1', [id]);
+        if (check.rows.length === 0) throw new HttpException('Producto no encontrado', HttpStatus.NOT_FOUND);
+
+        if (user.companyId !== check.rows[0].company_id) {
+            throw new HttpException('No tienes permiso', HttpStatus.FORBIDDEN);
+        }
+
+        await this.db.query('DELETE FROM products WHERE id = $1', [id]);
+        return { message: 'Producto eliminado' };
+    }
+
+    async importProductsV2(user: any, products: any[]) {
+        if (!user.companyId) {
             throw new HttpException('Debes pertenecer a una empresa para importar productos', HttpStatus.FORBIDDEN);
         }
 
-        const companyId = userCheck.rows[0].company_id;
+        const companyId = user.companyId;
         const imported: any[] = [];
         const errors: any[] = [];
 
@@ -329,5 +410,4 @@ export class ProductsService {
         const result = await this.db.query('SELECT * FROM product_categories ORDER BY name ASC');
         return result.rows;
     }
-}
 

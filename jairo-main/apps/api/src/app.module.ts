@@ -23,6 +23,7 @@ import { ActivitiesModule } from './activities/activities.module';
 import { AdminModule } from './admin/admin.module';
 import { OpportunitiesModule } from './opportunities/opportunities.module';
 import { EventsModule } from './events/events.module';
+import { InsforgeModule } from './insforge/insforge.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { EventsModule } from './events/events.module';
     AdminModule,
     OpportunitiesModule,
     EventsModule,
+    InsforgeModule,
 
     // Rate Limiting: 100 requests per minute per IP
     ThrottlerModule.forRoot([{

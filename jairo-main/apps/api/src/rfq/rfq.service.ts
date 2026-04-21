@@ -173,58 +173,6 @@ export class RfqService {
         }
     }
 
-    async getMyRfqs(token: string) {
-        const user = this.getUserFromToken(token);
-
-        try {
-            const result = await this.db.query(`
-                SELECT 
-                    r.*,
-                    s.name as sector_name,
-                    (SELECT COUNT(*) FROM rfq_quotes WHERE rfq_id = r.id) as quote_count
-                FROM rfqs r
-                LEFT JOIN sectors s ON r.sector_id = s.id
-                WHERE r.requester_id = $1
-                ORDER BY r.created_at DESC
-            `, [user.id]);
-
-            return { rfqs: result.rows };
-        } catch (error) {
-            this.logger.error('Error getting my RFQs', error);
-            throw new HttpException('Error al obtener mis RFQs', HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    async getReceivedRfqs(token: string) {
-        const user = this.getUserFromToken(token);
-
-        try {
-            const result = await this.db.query(`
-                SELECT 
-                    r.*,
-                    u.name as requester_name,
-                    c.name as requester_company,
-                    s.name as sector_name,
-                    (SELECT COUNT(*) FROM rfq_quotes WHERE rfq_id = r.id AND user_id = $1) as my_quotes
-                FROM rfqs r
-                LEFT JOIN users u ON r.requester_id = u.id
-                LEFT JOIN companies c ON r.company_id = c.id
-                LEFT JOIN sectors s ON r.sector_id = s.id
-                WHERE r.status = 'open'
-                  AND (r.is_public = true OR EXISTS (
-                      SELECT 1 FROM rfq_targets rt 
-                      WHERE rt.rfq_id = r.id AND rt.company_id = $2
-                  ))
-                ORDER BY r.created_at DESC
-            `, [user.id, user.companyId || null]);
-
-            return { rfqs: result.rows };
-        } catch (error) {
-            this.logger.error('Error getting received RFQs', error);
-            throw new HttpException('Error al obtener RFQs recibidas', HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     async getRfqDetail(id: string) {
         try {
             const rfq = await this.db.query(`
@@ -268,18 +216,112 @@ export class RfqService {
         }
     }
 
-    async submitQuote(rfqId: string, token: string, data: any) {
-        const user = this.getUserFromToken(token);
 
+    // --- V2 Methods (Using JwtAuthGuard) ---
+
+    async createRfqV2(user: any, data: any) {
+        const client = await this.db.getPool().connect();
+
+        try {
+            await client.query('BEGIN');
+
+            const result = await client.query(`
+                INSERT INTO rfqs (requester_id, company_id, title, description, sector_id, quantity, budget, deadline, is_public)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+                RETURNING *
+            `, [
+                user.userId,
+                user.companyId || null,
+                data.title,
+                data.description,
+                data.sectorId || null,
+                data.quantity || null,
+                data.budget || null,
+                data.deadline || null,
+                !data.targetCompanyIds || data.targetCompanyIds.length === 0
+            ]);
+
+            const rfq = result.rows[0];
+
+            if (data.targetCompanyIds && data.targetCompanyIds.length > 0) {
+                for (const companyId of data.targetCompanyIds) {
+                    await client.query(
+                        'INSERT INTO rfq_targets (rfq_id, company_id) VALUES ($1, $2)',
+                        [rfq.id, companyId]
+                    );
+                }
+            }
+
+            await client.query('COMMIT');
+            this.logger.log(`📋 RFQ creado: ${rfq.title}`);
+
+            return { rfq, mensaje: 'Solicitud de cotización creada exitosamente' };
+        } catch (error) {
+            await client.query('ROLLBACK');
+            this.logger.error('Error creating RFQ', error);
+            throw error;
+        } finally {
+            client.release();
+        }
+    }
+
+    async getMyRfqsV2(user: any) {
+        try {
+            const result = await this.db.query(`
+                SELECT 
+                    r.*,
+                    s.name as sector_name,
+                    (SELECT COUNT(*) FROM rfq_quotes WHERE rfq_id = r.id) as quote_count
+                FROM rfqs r
+                LEFT JOIN sectors s ON r.sector_id = s.id
+                WHERE r.requester_id = $1
+                ORDER BY r.created_at DESC
+            `, [user.userId]);
+
+            return { rfqs: result.rows };
+        } catch (error) {
+            this.logger.error('Error getting my RFQs', error);
+            throw new HttpException('Error al obtener mis RFQs', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    async getReceivedRfqsV2(user: any) {
+        try {
+            const result = await this.db.query(`
+                SELECT 
+                    r.*,
+                    u.name as requester_name,
+                    c.name as requester_company,
+                    s.name as sector_name,
+                    (SELECT COUNT(*) FROM rfq_quotes WHERE rfq_id = r.id AND user_id = $1) as my_quotes
+                FROM rfqs r
+                LEFT JOIN users u ON r.requester_id = u.id
+                LEFT JOIN companies c ON r.company_id = c.id
+                LEFT JOIN sectors s ON r.sector_id = s.id
+                WHERE r.status = 'open'
+                  AND (r.is_public = true OR EXISTS (
+                      SELECT 1 FROM rfq_targets rt 
+                      WHERE rt.rfq_id = r.id AND rt.company_id = $2
+                  ))
+                ORDER BY r.created_at DESC
+            `, [user.userId, user.companyId || null]);
+
+            return { rfqs: result.rows };
+        } catch (error) {
+            this.logger.error('Error getting received RFQs', error);
+            throw new HttpException('Error al obtener RFQs recibidas', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    async submitQuoteV2(rfqId: string, user: any, data: any) {
         try {
             const result = await this.db.query(`
                 INSERT INTO rfq_quotes (rfq_id, company_id, user_id, price, delivery_days, notes)
                 VALUES ($1, $2, $3, $4, $5, $6)
                 RETURNING *
-            `, [rfqId, user.companyId || null, user.id, data.price, data.deliveryDays, data.notes || null]);
+            `, [rfqId, user.companyId || null, user.userId, data.price, data.deliveryDays, data.notes || null]);
 
             this.logger.log(`💰 Cotización enviada para RFQ ${rfqId}`);
-
             return { cotizacion: result.rows[0], mensaje: 'Cotización enviada exitosamente' };
         } catch (error) {
             this.logger.error('Error submitting quote', error);
@@ -287,43 +329,26 @@ export class RfqService {
         }
     }
 
-    async acceptQuote(rfqId: string, quoteId: string, token: string) {
-        const user = this.getUserFromToken(token);
+    async acceptQuoteV2(rfqId: string, quoteId: string, user: any) {
         const client = await this.db.getPool().connect();
 
         try {
             await client.query('BEGIN');
 
-            // Verify ownership
             const rfq = await client.query(
                 'SELECT * FROM rfqs WHERE id = $1 AND requester_id = $2',
-                [rfqId, user.id]
+                [rfqId, user.userId]
             );
 
             if (rfq.rows.length === 0) {
                 throw new HttpException('No autorizado', HttpStatus.FORBIDDEN);
             }
 
-            // Accept this quote
-            await client.query(
-                'UPDATE rfq_quotes SET status = $1 WHERE id = $2',
-                ['accepted', quoteId]
-            );
-
-            // Reject others
-            await client.query(
-                'UPDATE rfq_quotes SET status = $1 WHERE rfq_id = $2 AND id != $3',
-                ['rejected', rfqId, quoteId]
-            );
-
-            // Close RFQ
-            await client.query(
-                'UPDATE rfqs SET status = $1, updated_at = NOW() WHERE id = $2',
-                ['closed', rfqId]
-            );
+            await client.query('UPDATE rfq_quotes SET status = $1 WHERE id = $2', ['accepted', quoteId]);
+            await client.query('UPDATE rfq_quotes SET status = $1 WHERE rfq_id = $2 AND id != $3', ['rejected', rfqId, quoteId]);
+            await client.query('UPDATE rfqs SET status = $1, updated_at = NOW() WHERE id = $2', ['closed', rfqId]);
 
             await client.query('COMMIT');
-
             return { mensaje: 'Cotización aceptada exitosamente' };
         } catch (error) {
             await client.query('ROLLBACK');

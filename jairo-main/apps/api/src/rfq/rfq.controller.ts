@@ -1,22 +1,24 @@
-import { Controller, Get, Post, Body, Param, Query, Headers } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { RfqService } from './rfq.service';
 import { CreateRfqDto } from '../dto/create-rfq.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { GetUser } from '../auth/decorators/get-user.decorator';
 
 @Controller('rfq')
 export class RfqController {
     constructor(private readonly rfqService: RfqService) { }
 
-    // Crear solicitud de cotización
+    // Crear solicitud de cotización (Protegido)
+    @UseGuards(JwtAuthGuard)
     @Post()
     async createRfq(
         @Body() body: CreateRfqDto,
-        @Headers('authorization') auth: string
+        @GetUser() user: any
     ) {
-        const token = auth?.replace('Bearer ', '');
-        return this.rfqService.createRfq(token, body);
+        return this.rfqService.createRfqV2(user, body);
     }
 
-    // Listar RFQs públicos
+    // Listar RFQs públicos (Público)
     @Get()
     async listPublicRfqs(
         @Query('sector') sector?: string,
@@ -25,27 +27,28 @@ export class RfqController {
         return this.rfqService.listPublicRfqs(sector, page);
     }
 
-    // Mis RFQs (enviados)
+    // Mis RFQs (Protegido)
+    @UseGuards(JwtAuthGuard)
     @Get('my-requests')
-    async getMyRfqs(@Headers('authorization') auth: string) {
-        const token = auth?.replace('Bearer ', '');
-        return this.rfqService.getMyRfqs(token);
+    async getMyRfqs(@GetUser() user: any) {
+        return this.rfqService.getMyRfqsV2(user);
     }
 
-    // RFQs recibidos
+    // RFQs recibidos (Protegido)
+    @UseGuards(JwtAuthGuard)
     @Get('received')
-    async getReceivedRfqs(@Headers('authorization') auth: string) {
-        const token = auth?.replace('Bearer ', '');
-        return this.rfqService.getReceivedRfqs(token);
+    async getReceivedRfqs(@GetUser() user: any) {
+        return this.rfqService.getReceivedRfqsV2(user);
     }
 
-    // Detalle de RFQ
+    // Detalle de RFQ (Público/Protegido dependiendo de is_public, lógica en service)
     @Get(':id')
     async getRfqDetail(@Param('id') id: string) {
         return this.rfqService.getRfqDetail(id);
     }
 
-    // Responder a RFQ (cotizar)
+    // Responder a RFQ (Protegido)
+    @UseGuards(JwtAuthGuard)
     @Post(':id/quote')
     async submitQuote(
         @Param('id') rfqId: string,
@@ -54,20 +57,19 @@ export class RfqController {
             deliveryDays: number;
             notes?: string;
         },
-        @Headers('authorization') auth: string
+        @GetUser() user: any
     ) {
-        const token = auth?.replace('Bearer ', '');
-        return this.rfqService.submitQuote(rfqId, token, body);
+        return this.rfqService.submitQuoteV2(rfqId, user, body);
     }
 
-    // Aceptar cotización
+    // Aceptar cotización (Protegido)
+    @UseGuards(JwtAuthGuard)
     @Post(':id/quote/:quoteId/accept')
     async acceptQuote(
         @Param('id') rfqId: string,
         @Param('quoteId') quoteId: string,
-        @Headers('authorization') auth: string
+        @GetUser() user: any
     ) {
-        const token = auth?.replace('Bearer ', '');
-        return this.rfqService.acceptQuote(rfqId, quoteId, token);
+        return this.rfqService.acceptQuoteV2(rfqId, quoteId, user);
     }
 }

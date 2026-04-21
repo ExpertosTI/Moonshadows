@@ -40,6 +40,7 @@ export const companies = pgTable('companies', {
     status: companyStatusEnum('status').default('pending'),
     createdAt: timestamp('created_at').defaultNow(),
     updatedAt: timestamp('updated_at').defaultNow(),
+    aiMetadata: jsonb('ai_metadata'), // Insforge AI context and embeddings
 });
 
 // Categories (Per Company)
@@ -66,6 +67,7 @@ export const products = pgTable('products', {
     isActive: varchar('is_active', { length: 10 }).default('true'),
     createdAt: timestamp('created_at').defaultNow(),
     updatedAt: timestamp('updated_at').defaultNow(),
+    aiMetadata: jsonb('ai_metadata'), // Insforge AI context and embeddings
 });
 
 // Inventory/Stock

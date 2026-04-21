@@ -19,4 +19,9 @@ export class EventsController {
   getAttendanceList(@Param('id') id: string) {
     return this.eventsService.getAttendanceList(id);
   }
+
+  @Post('ai/profile')
+  generateAIProfile(@Body() data: { companyName: string, guestName: string }) {
+    return this.eventsService.generateAIProfile(data);
+  }
 }

@@ -48,4 +48,30 @@ export class EventsService {
       orderBy: (attendance, { desc }) => [desc(attendance.createdAt)],
     });
   }
+
+  async generateAIProfile(data: { companyName: string, guestName: string }) {
+    this.logger.log(`🤖 Generating AI Networking Profile for ${data.companyName} (${data.guestName})`);
+    
+    // Mockup of AI capability for MVP. In a real scenario, this would call Anthropic/Claude API 
+    // using the Insforge Service to analyze the company's sector and match potential business opportunities.
+    const tags = ["High Value", "B2B Lead", "Strategic Alliance"];
+    
+    if (data.companyName.toLowerCase().includes("tech") || data.companyName.toLowerCase().includes("soft")) {
+      tags.push("Digital Transformation", "SaaS");
+    } else if (data.companyName.toLowerCase().includes("farmacia") || data.companyName.toLowerCase().includes("salud")) {
+      tags.push("Healthcare", "Retail");
+    } else {
+      tags.push("Corporate", "Networking");
+    }
+
+    // Retorna un perfil enriquecido que el frontend pueda mostrar instantáneamente al hacer Check-in.
+    return {
+      success: true,
+      aiProfile: {
+        matchScore: Math.floor(Math.random() * (99 - 85 + 1)) + 85, // 85% to 99%
+        networkingTags: tags,
+        aiSummary: `El sistema Insforge ha identificado a ${data.companyName} como un nodo estratégico de alto valor para alianzas B2B. Potencial de sinergia: Alto.`
+      }
+    };
+  }
 }

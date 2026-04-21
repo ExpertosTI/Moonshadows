@@ -1,12 +1,14 @@
-import { Controller, Get, Post, Body, Param, Query, Headers } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from '../dto/create-product.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { GetUser } from '../auth/decorators/get-user.decorator';
 
 @Controller('products')
 export class ProductsController {
     constructor(private readonly productsService: ProductsService) { }
 
-    // Listar productos
+    // Listar productos (Público)
     @Get()
     async listProducts(
         @Query('companyId') companyId?: string,
@@ -19,57 +21,57 @@ export class ProductsController {
         return this.productsService.listProducts({ companyId, sector, busqueda, minPrice, maxPrice }, page);
     }
 
-    // Detalle de producto
+    // Detalle de producto (Público)
     @Get(':id')
     async getProduct(@Param('id') id: string) {
         return this.productsService.getProduct(id);
     }
 
-    // Productos de mi empresa
+    // Productos de mi empresa (Protegido)
+    @UseGuards(JwtAuthGuard)
     @Get('my/catalog')
-    async getMyCatalog(@Headers('authorization') auth: string) {
-        const token = auth?.replace('Bearer ', '');
-        return this.productsService.getMyCatalog(token);
+    async getMyCatalog(@GetUser() user: any) {
+        return this.productsService.getMyCatalogV2(user);
     }
 
-    // Crear producto
+    // Crear producto (Protegido)
+    @UseGuards(JwtAuthGuard)
     @Post()
     async createProduct(
         @Body() body: CreateProductDto,
-        @Headers('authorization') auth: string
+        @GetUser() user: any
     ) {
-        const token = auth?.replace('Bearer ', '');
-        return this.productsService.createProduct(token, body);
+        return this.productsService.createProductV2(user, body);
     }
 
-    // Actualizar producto
-    @Post(':id/update')
+    // Actualizar producto (Protegido)
+    @UseGuards(JwtAuthGuard)
+    @Patch(':id')
     async updateProduct(
         @Param('id') id: string,
         @Body() body: any,
-        @Headers('authorization') auth: string
+        @GetUser() user: any
     ) {
-        const token = auth?.replace('Bearer ', '');
-        return this.productsService.updateProduct(id, token, body);
+        return this.productsService.updateProductV2(id, user, body);
     }
 
-    // Eliminar producto
-    @Post(':id/delete')
+    // Eliminar producto (Protegido)
+    @UseGuards(JwtAuthGuard)
+    @Delete(':id')
     async deleteProduct(
         @Param('id') id: string,
-        @Headers('authorization') auth: string
+        @GetUser() user: any
     ) {
-        const token = auth?.replace('Bearer ', '');
-        return this.productsService.deleteProduct(id, token);
+        return this.productsService.deleteProductV2(id, user);
     }
 
-    // Importar productos (CSV)
+    // Importar productos (Protegido)
+    @UseGuards(JwtAuthGuard)
     @Post('import')
     async importProducts(
         @Body() body: { products: any[] },
-        @Headers('authorization') auth: string
+        @GetUser() user: any
     ) {
-        const token = auth?.replace('Bearer ', '');
-        return this.productsService.importProducts(token, body.products);
+        return this.productsService.importProductsV2(user, body.products);
     }
 }
