@@ -27,9 +27,9 @@ export class InsforgeService {
             where: eq(products.isActive, 'true'),
         });
 
-        // Formato específico optimizado para generación de Embeddings / LLM Context
         const formattedData = allCompanies.map(company => {
             const companyProducts = allProducts.filter(p => p.companyId === company.id);
+            const sectorData: any = company.sector;
             
             // Limpieza básica de HTML y caracteres extraños (Depuración)
             const cleanDescription = (text?: string | null) => {
@@ -41,15 +41,15 @@ export class InsforgeService {
                 insforge_id: `COMP_${company.id}`,
                 entity_type: 'company',
                 name: company.name,
-                sector: company.sector?.name || 'General',
+                sector: sectorData?.name || 'General',
                 location: cleanDescription(company.address),
-                semantic_context: `Empresa ${company.name} operando en el sector de ${company.sector?.name || 'General'}. Ubicada en ${cleanDescription(company.address)}.`,
+                semantic_context: `Empresa ${company.name} operando en el sector de ${sectorData?.name || 'General'}. Ubicada en ${cleanDescription(company.address)}.`,
                 products_catalog: companyProducts.map(p => ({
                     id: p.id,
                     name: p.name,
                     description: cleanDescription(p.description),
                     price: p.price,
-                    tags: [company.sector?.name, p.name.split(' ')[0]].filter(Boolean) // Simple tag generation
+                    tags: [sectorData?.name, p.name.split(' ')[0]].filter(Boolean) // Simple tag generation
                 })),
                 raw_metadata: company.aiMetadata || {}
             };

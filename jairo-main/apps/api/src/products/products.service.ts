@@ -410,4 +410,4 @@ export class ProductsService {
         const result = await this.db.query('SELECT * FROM product_categories ORDER BY name ASC');
         return result.rows;
     }
-
+}

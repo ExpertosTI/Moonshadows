@@ -1,0 +1,89 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: b2b_platform
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - jairo_internal
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+  redis:
+    image: redis:alpine
+    networks:
+      - jairo_internal
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.6
+    environment:
+      MEILI_MASTER_KEY: masterKey
+    volumes:
+      - meilisearch_data:/meili_data
+    networks:
+      - jairo_internal
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    environment:
+      DATABASE_URL: postgres://postgres:password@postgres:5432/b2b_platform
+      REDIS_URL: redis://redis:6379
+      MEILISEARCH_HOST: http://meilisearch:7700
+      MEILISEARCH_API_KEY: masterKey
+    networks:
+      - jairo_internal
+      - RenaceNet
+    deploy:
+      restart_policy:
+        condition: on-failure
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.jairoapi.rule=Host(`jairoapp.renace.tech`) && PathPrefix(`/api`)"
+        - "traefik.http.routers.jairoapi.entrypoints=websecure"
+        - "traefik.http.routers.jairoapi.tls.certresolver=letsencryptresolver"
+        - "traefik.http.services.jairoapi.loadbalancer.server.port=3001"
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    environment:
+      NEXT_PUBLIC_API_URL: https://jairoapp.renace.tech/api
+    networks:
+      - jairo_internal
+      - RenaceNet
+    depends_on:
+      - api
+    deploy:
+      restart_policy:
+        condition: on-failure
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.jairoweb.rule=Host(`jairoapp.renace.tech`)"
+        - "traefik.http.routers.jairoweb.entrypoints=websecure"
+        - "traefik.http.routers.jairoweb.tls.certresolver=letsencryptresolver"
+        - "traefik.http.services.jairoweb.loadbalancer.server.port=3000"
+
+volumes:
+  postgres_data:
+  meilisearch_data:
+
+networks:
+  jairo_internal:
+    driver: overlay
+  RenaceNet:
+    external: true

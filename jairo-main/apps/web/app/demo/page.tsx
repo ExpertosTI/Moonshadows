@@ -5,7 +5,7 @@ import Link from "next/link";
 import { 
     LayoutDashboard, Users, Briefcase, FileText, Settings, 
     Bell, Search, Menu, X, ArrowUpRight, TrendingUp, 
-    Activity, BarChart3, PieChart, ChevronRight
+    Activity, BarChart3, PieChart, ChevronRight, Zap
 } from "lucide-react";
 
 export default function DemoPage() {
