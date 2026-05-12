@@ -1,0 +1,45 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "prestapp",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["-e", "require('http').createServer((q,r)=>{const fs=require('fs'),p=require('path'),u=q.url==='/'?'/index.html':q.url,f=p.join('PrestApp',u),e={'.html':'text/html','.css':'text/css','.js':'text/javascript','.svg':'image/svg+xml','.ico':'image/x-icon','.png':'image/png','.jpg':'image/jpeg'};fs.readFile(f,(err,d)=>{if(err){r.writeHead(404);r.end('Not found')}else{r.writeHead(200,{'Content-Type':e[p.extname(f)]||'text/plain'});r.end(d)}})}).listen(3456,()=>console.log('Server on 3456'))"],
+      "port": 3456
+    },
+    {
+      "name": "yoyas",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["-e", "require('http').createServer((q,r)=>{const fs=require('fs'),p=require('path'),u=q.url==='/'?'/index.html':q.url,f=p.join('caughys-makeup-training',u),e={'.html':'text/html','.css':'text/css','.js':'text/javascript','.svg':'image/svg+xml','.ico':'image/x-icon','.png':'image/png','.jpg':'image/jpeg'};fs.readFile(f,(err,d)=>{if(err){r.writeHead(404);r.end('Not found')}else{r.writeHead(200,{'Content-Type':e[p.extname(f)]||'text/plain'});r.end(d)}})}).listen(3457,()=>console.log('Server on 3457'))"],
+      "port": 3457
+    },
+    {
+      "name": "presta_pro",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["/Users/brainiac/Documents/renace.tech/presta_pro/node_modules/.bin/vite", "--port", "5173"],
+      "cwd": "/Users/brainiac/Documents/renace.tech/presta_pro",
+      "port": 5173
+    },
+    {
+      "name": "renace-web",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "/Users/brainiac/Documents/renace.tech/jairo-main/apps/web",
+      "port": 3000
+    },
+    {
+      "name": "importadorar40",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["server.js"],
+      "cwd": "/Users/brainiac/Documents/renace.tech/importadorar40.com",
+      "port": 3001
+    },
+    {
+      "name": "renace-landing",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["-e", "require('http').createServer((q,r)=>{const fs=require('fs'),p=require('path'),u=q.url==='/'?'/landing.html':q.url.split('?')[0],f=p.join(__dirname,u),e={'.html':'text/html; charset=utf-8','.css':'text/css','.js':'text/javascript','.svg':'image/svg+xml','.ico':'image/x-icon','.png':'image/png','.jpg':'image/jpeg','.json':'application/json'};fs.readFile(f,(err,d)=>{if(err){r.writeHead(404);r.end('Not found: '+u)}else{r.writeHead(200,{'Content-Type':e[p.extname(f)]||'text/plain'});r.end(d)}})}).listen(3460,()=>console.log('renace-landing on 3460'))"],
+      "cwd": "/Users/brainiac/Documents/renace.tech",
+      "port": 3460
+    }
+  ]
+}
