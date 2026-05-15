@@ -32,10 +32,12 @@ deploy_vps() {
     
     echo -e "${YELLOW}💾 Asegurando que los cambios locales estén comiteados...${NC}"
     git add .
-    # Si no hay cambios para comitear, git commit fallará, así que lo manejamos
     git commit -m "Auto-deploy: Update RNV Manager logic $(date +'%Y-%m-%d %H:%M:%S')" || echo "No hay cambios nuevos para comitear."
     
-    echo -e "${YELLOW}⬆️  Empujando cambios al repositorio remoto...${NC}"
+    echo -e "${YELLOW}🔄 Sincronizando con el repositorio remoto (Pull)...${NC}"
+    git pull origin main --rebase
+
+    echo -e "${YELLOW}⬆️  Empujando cambios al repositorio remoto (Push)...${NC}"
     git push origin main
 
     echo -e "${YELLOW}🔄 Actualizando servidor VPS remotamente...${NC}"
