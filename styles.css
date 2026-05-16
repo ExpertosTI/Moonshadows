@@ -218,17 +218,14 @@
   .nav__right { display: flex; align-items: center; gap: .75rem; }
 
   .nav__light {
-    width: 42px; height: 42px; border-radius: 50%;
+    width: 38px; height: 38px; flex: 0 0 38px; border-radius: 50%;
     background: color-mix(in oklch, var(--night) 70%, transparent);
     border: 1px solid var(--line-2);
-    -webkit-backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-    color: var(--gold-lt);
     display: grid; place-items: center;
     transition: all var(--d-fast) var(--ease);
+    position: relative; overflow: hidden;
   }
-  .nav__light svg { width: 20px; height: 20px; display: block; }
+  .nav__light svg { width: 18px !important; height: 18px !important; display: block; pointer-events: none; }
   .nav__light:hover {
     background: var(--gold); color: var(--ink);
     border-color: var(--gold);
@@ -719,11 +716,6 @@
                 transform var(--d-base) var(--ease);
   }
   .node.is-open .node__list li { opacity: 1; transform: none; }
-  .node.is-open .node__list li:nth-child(1) { transition-delay: .25s; }
-  .node.is-open .node__list li:nth-child(2) { transition-delay: .3s; }
-  .node.is-open .node__list li:nth-child(3) { transition-delay: .35s; }
-  .node.is-open .node__list li:nth-child(4) { transition-delay: .4s; }
-  .node.is-open .node__list li:nth-child(5) { transition-delay: .45s; }
   .node__list li::before {
     content: '';
     flex: 0 0 6px; width: 6px; height: 6px; margin-top: .55em;
@@ -927,7 +919,7 @@
     .ignite {
       grid-template-columns: 1fr; grid-template-rows: 1fr auto;
       gap: 0; height: 100dvh; max-width: none;
-      padding: 5.5rem 1.5rem 2rem; position: relative;
+      padding: 8.5rem 1.5rem 2rem; position: relative;
     }
     .ignite__svg {
       width: 88vw; max-width: 480px;

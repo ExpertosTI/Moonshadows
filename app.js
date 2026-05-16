@@ -31,13 +31,13 @@
   if ('IntersectionObserver' in window) {
     const io = new IntersectionObserver((entries) => {
       entries.forEach((e) => {
-        if (e.isIntersecting && e.intersectionRatio > 0.4) {
+        if (e.isIntersecting && e.intersectionRatio > 0.25) {
           const s = e.target.dataset.scene;
           body.dataset.stage = s;
           dots.forEach((d) => d.classList.toggle('is-active', d.dataset.go === s));
         }
       });
-    }, { threshold: [0.4, 0.6] });
+    }, { threshold: [0.25, 0.5] });
     scenes.forEach((s) => io.observe(s));
   }
 

@@ -26,7 +26,7 @@
 
   <link rel="preload" as="image" href="/assets/logo-full.png" />
   <link rel="preload" as="image" href="/assets/logo-icon.png" />
-  <link rel="stylesheet" href="/styles.css?v=4.0" />
+  <link rel="stylesheet" href="/styles.css?v=4.2" />
 
   <!-- SVG icon sprite -->
   <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute; width:0; height:0;" aria-hidden="true">
@@ -366,61 +366,63 @@
 
     <!-- ── SCENE 2 — METHODOLOGY ── -->
     <section class="scene scene--hub" id="scene-2" data-scene="2" style="background: var(--night-2);">
-      <div class="hub__intro">
-        <p class="scene__eyebrow">Nuestra Metodologia</p>
-        <h2 class="scene__title">Como lo <em>entregamos</em>.</h2>
-        <p class="hub__lede">
+      <div class="hub__intro" style="max-width: 1200px; margin: 0 auto 2.5rem; padding: 0 clamp(1.5rem, 5vw, 5rem);">
+        <p class="scene__eyebrow">Metodologia Moonshadows</p>
+        <h2 class="scene__title" style="font-size: clamp(2.5rem, 4vw, 3.5rem); margin-bottom: .5rem;">
+          Como lo <em>entregamos</em>.
+        </h2>
+        <p class="hub__lede" style="max-width: 600px; font-size: 1.15rem; opacity: .8;">
           Un sistema de cuatro fases disenado para asegurar que la estrategia se convierta en realidad tangible.
         </p>
       </div>
 
-      <div class="methodology__grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 1100px; margin: 0 auto; padding: 0 clamp(1.5rem, 5vw, 5rem);">
+      <div class="methodology__grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; max-width: 1300px; margin: 0 auto; padding: 0 clamp(1rem, 3vw, 2.5rem);">
         
-        <div class="node__model" style="opacity: 1; transform: none; min-height: 200px;">
-          <span class="node__model-icon" aria-hidden="true">
+        <div class="node__model" style="opacity: 1; transform: none; padding: 1.5rem; background: color-mix(in oklch, var(--night-2) 40%, transparent); border: 1px solid var(--line); border-radius: 16px; backdrop-filter: blur(10px);">
+          <span class="node__model-icon" style="background: var(--gold); color: var(--ink); border: none; margin-bottom: 1.25rem;">
             <svg><use href="#icon-diag"/></svg>
           </span>
           <div class="node__model-body">
             <span class="node__roman">I</span>
-            <h4>Diagnostico Puntual</h4>
-            <span class="node__dur">4 &ndash; 8 semanas</span>
-            <p>Analisis colaborativo. Decision informada para sentar las bases del crecimiento.</p>
+            <h4 style="font-size: 1.25rem; margin-bottom: .5rem; color: var(--gold-lt);">Diagnostico Puntual</h4>
+            <span class="node__dur" style="display: block; font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .75rem; color: var(--gold);">4 &ndash; 8 semanas</span>
+            <p style="font-size: .9rem; line-height: 1.5; opacity: .8;">Analisis colaborativo. Decision informada para sentar las bases del crecimiento.</p>
           </div>
         </div>
 
-        <div class="node__model" style="opacity: 1; transform: none; min-height: 200px;">
-          <span class="node__model-icon" aria-hidden="true">
+        <div class="node__model" style="opacity: 1; transform: none; padding: 1.5rem; background: color-mix(in oklch, var(--night-2) 40%, transparent); border: 1px solid var(--line); border-radius: 16px; backdrop-filter: blur(10px);">
+          <span class="node__model-icon" style="background: var(--gold); color: var(--ink); border: none; margin-bottom: 1.25rem;">
             <svg><use href="#icon-design"/></svg>
           </span>
           <div class="node__model-body">
             <span class="node__roman">II</span>
-            <h4>Diseno Tecnico</h4>
-            <span class="node__dur">8 &ndash; 16 semanas</span>
-            <p>Hoja de ruta ejecutable y priorizada. La arquitectura de la solucion.</p>
+            <h4 style="font-size: 1.25rem; margin-bottom: .5rem; color: var(--gold-lt);">Diseno Tecnico</h4>
+            <span class="node__dur" style="display: block; font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .75rem; color: var(--gold);">8 &ndash; 16 semanas</span>
+            <p style="font-size: .9rem; line-height: 1.5; opacity: .8;">Hoja de ruta ejecutable y priorizada. La arquitectura de la solucion.</p>
           </div>
         </div>
 
-        <div class="node__model" style="opacity: 1; transform: none; min-height: 200px;">
-          <span class="node__model-icon" aria-hidden="true">
+        <div class="node__model" style="opacity: 1; transform: none; padding: 1.5rem; background: color-mix(in oklch, var(--night-2) 40%, transparent); border: 1px solid var(--line); border-radius: 16px; backdrop-filter: blur(10px);">
+          <span class="node__model-icon" style="background: var(--gold); color: var(--ink); border: none; margin-bottom: 1.25rem;">
             <svg><use href="#icon-impl-mini"/></svg>
           </span>
           <div class="node__model-body">
             <span class="node__roman">III</span>
-            <h4>Implementacion</h4>
-            <span class="node__dur">4 &ndash; 12 meses</span>
-            <p>Ejecucion real junto al equipo del cliente. Transformacion en el terreno.</p>
+            <h4 style="font-size: 1.25rem; margin-bottom: .5rem; color: var(--gold-lt);">Implementacion</h4>
+            <span class="node__dur" style="display: block; font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .75rem; color: var(--gold);">4 &ndash; 12 meses</span>
+            <p style="font-size: .9rem; line-height: 1.5; opacity: .8;">Ejecucion real junto al equipo del cliente. Transformacion en el terreno.</p>
           </div>
         </div>
 
-        <div class="node__model" style="opacity: 1; transform: none; min-height: 200px;">
-          <span class="node__model-icon" aria-hidden="true">
+        <div class="node__model" style="opacity: 1; transform: none; padding: 1.5rem; background: color-mix(in oklch, var(--night-2) 40%, transparent); border: 1px solid var(--line); border-radius: 16px; backdrop-filter: blur(10px);">
+          <span class="node__model-icon" style="background: var(--gold); color: var(--ink); border: none; margin-bottom: 1.25rem;">
             <svg><use href="#icon-track"/></svg>
           </span>
           <div class="node__model-body">
             <span class="node__roman">IV</span>
-            <h4>Seguimiento Continuo</h4>
-            <span class="node__dur">revision anual</span>
-            <p>Extension estrategica a largo plazo para asegurar la sostenibilidad del exito.</p>
+            <h4 style="font-size: 1.25rem; margin-bottom: .5rem; color: var(--gold-lt);">Seguimiento</h4>
+            <span class="node__dur" style="display: block; font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .75rem; color: var(--gold);">revision anual</span>
+            <p style="font-size: .9rem; line-height: 1.5; opacity: .8;">Extension estrategica a largo plazo para asegurar la sostenibilidad del exito.</p>
           </div>
         </div>
 
@@ -463,6 +465,6 @@
 
   </main>
 
-  <script type="module" src="/app.js?v=4.0"></script>
+  <script type="module" src="/app.js?v=4.2"></script>
 </body>
 </html>
