@@ -129,15 +129,16 @@
   body::after {
     content: '';
     position: fixed;
-    top: var(--my); left: var(--mx);
+    top: 0; left: 0;
     width: 24px; height: 24px;
-    margin: -12px 0 0 -12px;
     border-radius: 50%;
     background: var(--gold-lt);
     box-shadow: 0 0 24px var(--gold-lt), 0 0 60px color-mix(in oklch, var(--gold) 60%, transparent);
     pointer-events: none; z-index: 70;
     mix-blend-mode: screen;
-    transition: transform var(--d-fast) var(--ease), opacity var(--d-fast) var(--ease);
+    /* Use translate for GPU acceleration and zero jitter */
+    transform: translate(calc(var(--mx) - 12px), calc(var(--my) - 12px));
+    transition: opacity var(--d-fast) var(--ease);
     will-change: transform;
   }
   body.cursor-out::after { opacity: 0; }
@@ -449,6 +450,7 @@
                 box-shadow var(--d-base) var(--ease);
     overflow: hidden;
     isolation: isolate;
+    scroll-margin-top: 100px;
   }
   /* Cursor-tracking spotlight (desktop) */
   .node::before {
