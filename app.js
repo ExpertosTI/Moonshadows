@@ -168,7 +168,7 @@
   /* ── Keyboard nav ─────────────────────────────────────── */
   let busy = false;
   const goToScene = (n) => {
-    if (busy || n < 0 || n > 2) return;
+    if (busy || n < 0 || n > 3) return;
     busy = true;
     document.getElementById('scene-' + n)?.scrollIntoView({ behavior: 'smooth' });
     setTimeout(() => busy = false, 600);
@@ -180,7 +180,7 @@
     if (e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); goToScene(cur + 1); }
     if (e.key === 'ArrowUp'   || e.key === 'PageUp')   { e.preventDefault(); goToScene(cur - 1); }
     if (e.key === 'Home') { e.preventDefault(); goToScene(0); }
-    if (e.key === 'End')  { e.preventDefault(); goToScene(2); }
+    if (e.key === 'End')  { e.preventDefault(); goToScene(3); }
     /* L key toggles light */
     if (e.key === 'l' || e.key === 'L') {
       if (!e.metaKey && !e.ctrlKey) { e.preventDefault(); toggleLight(); }

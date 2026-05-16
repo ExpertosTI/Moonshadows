@@ -23,7 +23,7 @@
 
   <link rel="preload" as="image" href="/assets/logo-full.png" />
   <link rel="preload" as="image" href="/assets/logo-icon.png" />
-  <link rel="stylesheet" href="/styles.css?v=3.2" />
+  <link rel="stylesheet" href="/styles.css?v=3.3" />
 
   <!-- SVG icon sprite -->
   <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute; width:0; height:0;" aria-hidden="true">
@@ -113,7 +113,8 @@
   <aside class="progress" aria-hidden="true">
     <button class="progress__dot is-active" data-go="0" aria-label="Inicio"></button>
     <button class="progress__dot" data-go="1" aria-label="Servicios"></button>
-    <button class="progress__dot" data-go="2" aria-label="Contacto"></button>
+    <button class="progress__dot" data-go="2" aria-label="Metodología"></button>
+    <button class="progress__dot" data-go="3" aria-label="Contacto"></button>
   </aside>
 
   <header class="nav" id="nav">
@@ -213,7 +214,7 @@
     </section>
 
 
-    <!-- ── SCENE 1 — UNIFIED HUB: 4 cards = desafio + respuesta ── -->
+    <!-- ── SCENE 1 — SERVICES: 4 cards = desafio + respuesta ── -->
     <section class="scene scene--hub" id="scene-1" data-scene="1">
 
       <div class="hub__intro">
@@ -246,31 +247,15 @@
                 "Decisiones grandes sin modelo economico que las soporte."
               </p>
               <p class="node__desc">Sistemas gobernables para escalar sin perder consistencia.</p>
-              <div class="node__split">
-                <div class="node__col">
-                  <p class="node__col-eye">Que hacemos</p>
-                  <ul class="node__list">
-                    <li>Diagnostico organizacional integral</li>
-                    <li>Procesos criticos con metricas de desempeno</li>
-                    <li>Gestion de calidad y trazabilidad</li>
-                    <li>Gobierno corporativo &middot; marco COSO</li>
-                    <li>Cumplimiento normativo y debida diligencia</li>
-                  </ul>
-                </div>
-                <div class="node__col">
-                  <p class="node__col-eye">Como lo entregamos</p>
-                  <div class="node__model">
-                    <span class="node__model-icon" aria-hidden="true">
-                      <svg><use href="#icon-diag"/></svg>
-                    </span>
-                    <div class="node__model-body">
-                      <span class="node__roman">I</span>
-                      <h4>Diagnostico Puntual</h4>
-                      <span class="node__dur">4 &ndash; 8 semanas</span>
-                      <p>Analisis colaborativo. Decision informada.</p>
-                    </div>
-                  </div>
-                </div>
+              <div class="node__body-inner">
+                <p class="node__col-eye">Que hacemos</p>
+                <ul class="node__list">
+                  <li>Diagnostico organizacional integral</li>
+                  <li>Procesos criticos con metricas de desempeno</li>
+                  <li>Gestion de calidad y trazabilidad</li>
+                  <li>Gobierno corporativo &middot; marco COSO</li>
+                  <li>Cumplimiento normativo y debida diligencia</li>
+                </ul>
               </div>
             </div>
           </div>
@@ -294,31 +279,15 @@
                 "Estrategias bien disenadas que nunca llegan a la operacion."
               </p>
               <p class="node__desc">Logica financiera que gobierna en tiempo real, no que reporta lo que ya paso.</p>
-              <div class="node__split">
-                <div class="node__col">
-                  <p class="node__col-eye">Que hacemos</p>
-                  <ul class="node__list">
-                    <li>Planeacion financiera multianual</li>
-                    <li>Modelacion de escenarios y sensibilidad</li>
-                    <li>Planes de negocio, factibilidad y valoracion</li>
-                    <li>Inteligencia comercial y rentabilidad por segmento</li>
-                    <li>Gestion de compras, inventario y activos</li>
-                  </ul>
-                </div>
-                <div class="node__col">
-                  <p class="node__col-eye">Como lo entregamos</p>
-                  <div class="node__model">
-                    <span class="node__model-icon" aria-hidden="true">
-                      <svg><use href="#icon-design"/></svg>
-                    </span>
-                    <div class="node__model-body">
-                      <span class="node__roman">II</span>
-                      <h4>Diseno Tecnico</h4>
-                      <span class="node__dur">8 &ndash; 16 semanas</span>
-                      <p>Hoja de ruta ejecutable y priorizada.</p>
-                    </div>
-                  </div>
-                </div>
+              <div class="node__body-inner">
+                <p class="node__col-eye">Que hacemos</p>
+                <ul class="node__list">
+                  <li>Planeacion financiera multianual</li>
+                  <li>Modelacion de escenarios y sensibilidad</li>
+                  <li>Planes de negocio, factibilidad y valoracion</li>
+                  <li>Inteligencia comercial y rentabilidad por segmento</li>
+                  <li>Gestion de compras, inventario y activos</li>
+                </ul>
               </div>
             </div>
           </div>
@@ -342,31 +311,15 @@
                 "Crecimiento reactivo: clientes que llegan por casualidad."
               </p>
               <p class="node__desc">Presencia diferenciada con estrategia comercial basada en datos.</p>
-              <div class="node__split">
-                <div class="node__col">
-                  <p class="node__col-eye">Que hacemos</p>
-                  <ul class="node__list">
-                    <li>Propuesta de valor e identidad de marca</li>
-                    <li>Sitios web optimizados para conversion</li>
-                    <li>SEO, contenido y embudos de captacion</li>
-                    <li>Programas de lealtad, referidos y NPS</li>
-                    <li>Meta &middot; Google Ads con optimizacion ROAS</li>
-                  </ul>
-                </div>
-                <div class="node__col">
-                  <p class="node__col-eye">Como lo entregamos</p>
-                  <div class="node__model">
-                    <span class="node__model-icon" aria-hidden="true">
-                      <svg><use href="#icon-impl-mini"/></svg>
-                    </span>
-                    <div class="node__model-body">
-                      <span class="node__roman">III</span>
-                      <h4>Implementacion</h4>
-                      <span class="node__dur">4 &ndash; 12 meses</span>
-                      <p>Ejecucion real junto al equipo del cliente.</p>
-                    </div>
-                  </div>
-                </div>
+              <div class="node__body-inner">
+                <p class="node__col-eye">Que hacemos</p>
+                <ul class="node__list">
+                  <li>Propuesta de valor e identidad de marca</li>
+                  <li>Sitios web optimizados para conversion</li>
+                  <li>SEO, contenido y embudos de captacion</li>
+                  <li>Programas de lealtad, referidos y NPS</li>
+                  <li>Meta &middot; Google Ads con optimizacion ROAS</li>
+                </ul>
               </div>
             </div>
           </div>
@@ -390,31 +343,15 @@
                 "Procesos que viven en personas, no en la organizacion."
               </p>
               <p class="node__desc">El 80 % del valor esta en la ejecucion. La armadura operativa.</p>
-              <div class="node__split">
-                <div class="node__col">
-                  <p class="node__col-eye">Que hacemos</p>
-                  <ul class="node__list">
-                    <li>PMO con hitos, riesgos y lecciones aprendidas</li>
-                    <li>Direccion estrategica y tableros ejecutivos</li>
-                    <li>Formacion y transferencia de metodologia</li>
-                    <li>Automatizacion con IA aplicada</li>
-                    <li>Gestion del cambio y adopcion medida</li>
-                  </ul>
-                </div>
-                <div class="node__col">
-                  <p class="node__col-eye">Como lo entregamos</p>
-                  <div class="node__model">
-                    <span class="node__model-icon" aria-hidden="true">
-                      <svg><use href="#icon-track"/></svg>
-                    </span>
-                    <div class="node__model-body">
-                      <span class="node__roman">IV</span>
-                      <h4>Seguimiento Continuo</h4>
-                      <span class="node__dur">revision anual</span>
-                      <p>Extension estrategica a largo plazo.</p>
-                    </div>
-                  </div>
-                </div>
+              <div class="node__body-inner">
+                <p class="node__col-eye">Que hacemos</p>
+                <ul class="node__list">
+                  <li>PMO con hitos, riesgos y lecciones aprendidas</li>
+                  <li>Direccion estrategica y tableros ejecutivos</li>
+                  <li>Formacion y transferencia de metodologia</li>
+                  <li>Automatizacion con IA aplicada</li>
+                  <li>Gestion del cambio y adopcion medida</li>
+                </ul>
               </div>
             </div>
           </div>
@@ -424,9 +361,72 @@
 
     </section>
 
+    <!-- ── SCENE 2 — METHODOLOGY: El Camino Moonshadows ── -->
+    <section class="scene scene--hub" id="scene-2" data-scene="2" style="background: var(--night-2);">
+      <div class="hub__intro">
+        <p class="scene__eyebrow">Nuestra Metodologia</p>
+        <h2 class="scene__title">Como lo <em>entregamos</em>.</h2>
+        <p class="hub__lede">
+          Un sistema de cuatro fases disenado para asegurar que la estrategia se convierta en realidad tangible.
+        </p>
+      </div>
 
-    <!-- ── SCENE 2 — CONTACT ───────────── -->
-    <section class="scene scene--contact" id="scene-2" data-scene="2">
+      <div class="nodes" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+        
+        <div class="node__model" style="opacity: 1; transform: none; min-height: 200px;">
+          <span class="node__model-icon" aria-hidden="true">
+            <svg><use href="#icon-diag"/></svg>
+          </span>
+          <div class="node__model-body">
+            <span class="node__roman">I</span>
+            <h4>Diagnostico Puntual</h4>
+            <span class="node__dur">4 &ndash; 8 semanas</span>
+            <p>Analisis colaborativo. Decision informada para sentar las bases del crecimiento.</p>
+          </div>
+        </div>
+
+        <div class="node__model" style="opacity: 1; transform: none; min-height: 200px;">
+          <span class="node__model-icon" aria-hidden="true">
+            <svg><use href="#icon-design"/></svg>
+          </span>
+          <div class="node__model-body">
+            <span class="node__roman">II</span>
+            <h4>Diseno Tecnico</h4>
+            <span class="node__dur">8 &ndash; 16 semanas</span>
+            <p>Hoja de ruta ejecutable y priorizada. La arquitectura de la solucion.</p>
+          </div>
+        </div>
+
+        <div class="node__model" style="opacity: 1; transform: none; min-height: 200px;">
+          <span class="node__model-icon" aria-hidden="true">
+            <svg><use href="#icon-impl-mini"/></svg>
+          </span>
+          <div class="node__model-body">
+            <span class="node__roman">III</span>
+            <h4>Implementacion</h4>
+            <span class="node__dur">4 &ndash; 12 meses</span>
+            <p>Ejecucion real junto al equipo del cliente. Transformacion en el terreno.</p>
+          </div>
+        </div>
+
+        <div class="node__model" style="opacity: 1; transform: none; min-height: 200px;">
+          <span class="node__model-icon" aria-hidden="true">
+            <svg><use href="#icon-track"/></svg>
+          </span>
+          <div class="node__model-body">
+            <span class="node__roman">IV</span>
+            <h4>Seguimiento Continuo</h4>
+            <span class="node__dur">revision anual</span>
+            <p>Extension estrategica a largo plazo para asegurar la sostenibilidad del exito.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ── SCENE 3 — CONTACT ───────────── -->
+    <section class="scene scene--contact" id="scene-3" data-scene="3">
       <img class="contact__mark" src="/assets/logo-full.png" alt="Moonshadows" />
 
       <h2 class="contact__quote">
@@ -460,6 +460,6 @@
 
   </main>
 
-  <script type="module" src="/app.js?v=3.2"></script>
+  <script type="module" src="/app.js?v=3.3"></script>
 </body>
 </html>
