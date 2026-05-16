@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" role="img" aria-label="Moonshadows logo" class="ms-logo">
+  <defs>
+    <radialGradient id="ms-moon" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#FFD45A"/>
+      <stop offset="60%" stop-color="#F2B523"/>
+      <stop offset="100%" stop-color="#E8A317"/>
+    </radialGradient>
+    <radialGradient id="ms-moon-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFD45A" stop-opacity="0.55"/>
+      <stop offset="60%" stop-color="#E8A317" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#E8A317" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ms-beam" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFD45A" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#F2B523" stop-opacity="0.55"/>
+    </linearGradient>
+    <radialGradient id="ms-bulb" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFF8D6"/>
+      <stop offset="60%" stop-color="#FFD45A"/>
+      <stop offset="100%" stop-color="#E8A317"/>
+    </radialGradient>
+    <filter id="ms-blur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8"/>
+    </filter>
+    <filter id="ms-blur-soft" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3"/>
+    </filter>
+  </defs>
+
+  <!-- soft moon halo -->
+  <ellipse class="ms-halo" cx="265" cy="295" rx="280" ry="320" fill="url(#ms-moon-glow)" filter="url(#ms-blur)"/>
+
+  <!-- moon disc -->
+  <g class="ms-moon-group">
+    <ellipse class="ms-moon-shadow" cx="275" cy="305" rx="195" ry="225" fill="#C77E0E" opacity="0.55"/>
+    <ellipse class="ms-moon" cx="265" cy="295" rx="195" ry="225" fill="url(#ms-moon)"/>
+  </g>
+
+  <!-- bare tree -->
+  <g class="ms-tree" fill="#16151F">
+    <!-- trunk -->
+    <path d="M250 720 L262 350 L278 350 L290 720 Z"/>
+    <!-- main branches -->
+    <path d="M270 380 L160 230 L150 245 L268 395 Z"/>
+    <path d="M270 380 L385 245 L378 232 L272 376 Z"/>
+    <path d="M270 420 L150 360 L148 378 L270 430 Z"/>
+    <path d="M270 420 L390 365 L388 380 L272 432 Z"/>
+    <path d="M268 460 L195 440 L195 452 L268 466 Z"/>
+    <path d="M272 460 L350 440 L350 452 L272 466 Z"/>
+    <!-- secondary branches -->
+    <path d="M180 250 L140 200 L135 207 L177 256 Z"/>
+    <path d="M200 270 L175 230 L171 235 L196 273 Z"/>
+    <path d="M225 295 L210 268 L207 271 L222 297 Z"/>
+    <path d="M365 268 L405 218 L410 225 L368 273 Z"/>
+    <path d="M340 290 L370 250 L373 255 L343 293 Z"/>
+    <path d="M310 305 L330 278 L333 281 L313 307 Z"/>
+    <!-- top spikes -->
+    <path d="M268 350 L255 220 L262 220 L272 350 Z"/>
+    <path d="M270 280 L245 200 L252 200 L274 280 Z"/>
+  </g>
+
+  <!-- lamppost -->
+  <g class="ms-lamp">
+    <!-- pole arm extending right -->
+    <path d="M270 350 L545 320 L545 330 L270 360 Z" fill="#1A1925"/>
+    <!-- vertical connector to shade -->
+    <path d="M540 320 L540 380 L552 380 L552 320 Z" fill="#1A1925"/>
+    <!-- shade (triangle) -->
+    <g class="ms-shade">
+      <path d="M460 380 L630 380 L546 470 Z" fill="#1A1925"/>
+      <path d="M460 380 L630 380 L620 392 L470 392 Z" fill="#2A2839"/>
+    </g>
+    <!-- bulb -->
+    <g class="ms-bulb-group">
+      <circle class="ms-bulb-glow" cx="546" cy="490" r="48" fill="url(#ms-moon-glow)" filter="url(#ms-blur)"/>
+      <circle class="ms-bulb-ring" cx="546" cy="490" r="26" fill="none" stroke="#1A1925" stroke-width="4"/>
+      <circle class="ms-bulb" cx="546" cy="490" r="22" fill="url(#ms-bulb)"/>
+    </g>
+  </g>
+
+  <!-- light beam -->
+  <g class="ms-beam-group">
+    <path class="ms-beam" d="M520 510 L572 510 L760 770 L332 770 Z" fill="url(#ms-beam)" opacity="0.85"/>
+    <path class="ms-beam-core" d="M530 510 L562 510 L660 770 L432 770 Z" fill="#FFE08A" opacity="0.55" filter="url(#ms-blur-soft)"/>
+  </g>
+</svg>
