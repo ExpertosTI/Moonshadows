@@ -228,7 +228,7 @@
     display: grid; place-items: center;
     transition: all var(--d-fast) var(--ease);
   }
-  .nav__light svg { width: 20px; height: 20px; }
+  .nav__light svg { width: 20px; height: 20px; display: block; }
   .nav__light:hover {
     background: var(--gold); color: var(--ink);
     border-color: var(--gold);
