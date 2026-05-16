@@ -10,8 +10,8 @@
   html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
   body { min-height: 100dvh; -webkit-font-smoothing: antialiased; }
   img, svg, video { display: block; max-width: 100%; }
-  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
-  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; }
   ul { list-style: none; }
   ::selection { background: color-mix(in oklch, var(--gold) 40%, transparent); color: var(--cream); }
 }
@@ -180,6 +180,10 @@
     border: 1px solid color-mix(in oklch, var(--cream) 30%, transparent);
     transition: all var(--d-fast) var(--ease);
     cursor: pointer; position: relative;
+    &::before {
+      content: '';
+      position: absolute; inset: -15px;
+    }
   }
   .progress__dot::after {
     content: attr(aria-label);
@@ -217,6 +221,8 @@
     width: 42px; height: 42px; border-radius: 50%;
     background: color-mix(in oklch, var(--night) 70%, transparent);
     border: 1px solid var(--line-2);
+    -webkit-backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
     color: var(--gold-lt);
     display: grid; place-items: center;
@@ -251,6 +257,8 @@
     color: var(--cream);
     border: 1px solid var(--line-2); border-radius: 999px;
     background: color-mix(in oklch, var(--night) 70%, transparent);
+    -webkit-backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
     transition: all var(--d-fast) var(--ease);
   }
@@ -871,6 +879,7 @@
       bottom: 1.25rem; left: 50%; transform: translateX(-50%);
       padding: .55rem .85rem;
       background: color-mix(in oklch, var(--night) 70%, transparent);
+      -webkit-backdrop-filter: blur(14px);
       backdrop-filter: blur(14px);
       border: 1px solid var(--line); border-radius: 999px;
       gap: .65rem;
@@ -946,9 +955,9 @@
       grid-template-areas:
         "icon shard num toggle"
         "icon title title title";
-      padding: .95rem 1rem; gap: .55rem .7rem;
-      column-gap: .7rem;
-      row-gap: .15rem;
+      padding: .95rem 1rem; gap: .45rem .6rem;
+      column-gap: .6rem;
+      row-gap: .1rem;
     }
     .node__icon { grid-area: icon; width: 40px; height: 40px; border-radius: 10px; align-self: center; }
     .node__icon svg { width: 22px; height: 22px; }
