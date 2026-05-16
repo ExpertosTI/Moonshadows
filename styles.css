@@ -625,6 +625,18 @@
   }
   .node.is-open .node__body { max-height: 1800px; opacity: 1; }
 
+  /* Illuminated internal content for open nodes */
+  .node.is-open .node__desc,
+  .node.is-open .node__list li,
+  .node.is-open .node__challenge,
+  .node.is-open .node__title {
+    color: var(--cream);
+    opacity: 1 !important;
+    text-shadow: 0 0 1px rgba(255,255,255,0.1);
+  }
+  .node.is-open .node__desc { color: #fff; }
+  .node.is-open .node__list li { color: var(--cream); }
+
   .node__body-inner {
     padding: 0 1.5rem 1.75rem;
   }
@@ -877,8 +889,14 @@
     .nav__right { gap: .4rem; flex-wrap: nowrap; align-items: center; }
     .nav__light { width: 32px; height: 32px; flex: 0 0 32px; }
     .nav__light svg { width: 14px; height: 14px; }
-    .nav__cta { padding: .4rem .6rem; font-size: .58rem; letter-spacing: .05em; flex-shrink: 0; border-radius: 99px; }
-    .nav__cta i { width: 14px; height: 14px; font-size: .6rem; }
+    .nav__cta { padding: .45rem .65rem; font-size: .62rem; letter-spacing: .08em; flex-shrink: 0; border-radius: 99px; }
+    .nav__cta i { width: 16px; height: 16px; font-size: .65rem; }
+
+    /* Fix methodology grid on tablet/small desktop */
+    .methodology__grid {
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
+      gap: 1.25rem !important;
+    }
 
     .progress {
       display: flex !important; flex-direction: row;
