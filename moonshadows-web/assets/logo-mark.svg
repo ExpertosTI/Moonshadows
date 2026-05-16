@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Moonshadows">
+  <defs>
+    <radialGradient id="mm-moon" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#FFD45A"/>
+      <stop offset="100%" stop-color="#E8A317"/>
+    </radialGradient>
+    <linearGradient id="mm-beam" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFD45A" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#F2B523" stop-opacity="0.4"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="22" cy="26" rx="16" ry="18" fill="url(#mm-moon)"/>
+  <g fill="#16151F">
+    <path d="M21 58 L22 30 L24 30 L25 58 Z"/>
+    <path d="M22 33 L13 22 L12 23 L22 34 Z"/>
+    <path d="M24 33 L34 23 L33 22 L24 34 Z"/>
+    <path d="M22 38 L13 34 L13 35 L22 39 Z"/>
+    <path d="M24 38 L33 34 L33 35 L24 39 Z"/>
+  </g>
+  <path d="M23 30 L46 28 L46 30 L23 32 Z" fill="#1A1925"/>
+  <path d="M44 28 L44 33 L48 33 L48 28 Z" fill="#1A1925"/>
+  <path d="M38 33 L52 33 L45 41 Z" fill="#1A1925"/>
+  <circle cx="45" cy="43" r="2.4" fill="#FFD45A"/>
+  <path d="M42 45 L48 45 L57 62 L33 62 Z" fill="url(#mm-beam)"/>
+</svg>

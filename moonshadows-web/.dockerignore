@@ -1,0 +1,10 @@
+.git
+.gitignore
+.claude
+README.md
+deploy.sh
+docker-compose.yml
+*.md
+node_modules
+.DS_Store
+public/source

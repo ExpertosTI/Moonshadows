@@ -1,0 +1,88 @@
+# ── Moonshadows — Docker Swarm + Traefik ─────────────────────
+#  Stack name: moonshadows  ·  Domain: ${DOMAIN:-moonshadows.do}
+#  Network:    RenaceNet (external overlay, see renace-deploy skill)
+#  Entrypoints: web (:80), websecure (:443)
+#  Cert resolver: letsencryptresolver
+
+services:
+  web:
+    image: moonshadows-web:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - RenaceNet
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      update_config:
+        order: start-first
+        parallelism: 1
+        failure_action: rollback
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 256M
+        reservations:
+          cpus: "0.05"
+          memory: 32M
+      labels:
+        # Traefik base
+        - traefik.enable=true
+        - traefik.docker.network=RenaceNet
+        - traefik.constraint-label=traefik-public
+
+        # ── HTTP → HTTPS redirect ───────────────────────────────
+        - traefik.http.routers.moonshadows-http.rule=Host(`${DOMAIN:-moonshadows.do}`) || Host(`www.${DOMAIN:-moonshadows.do}`)
+        - traefik.http.routers.moonshadows-http.entrypoints=web
+        - traefik.http.routers.moonshadows-http.middlewares=moonshadows-redirect-https
+
+        # ── HTTPS canonical (apex) ──────────────────────────────
+        - traefik.http.routers.moonshadows.rule=Host(`${DOMAIN:-moonshadows.do}`)
+        - traefik.http.routers.moonshadows.entrypoints=websecure
+        - traefik.http.routers.moonshadows.tls=true
+        - traefik.http.routers.moonshadows.tls.certresolver=letsencryptresolver
+        - traefik.http.routers.moonshadows.service=moonshadows-svc
+        - traefik.http.routers.moonshadows.middlewares=moonshadows-security
+
+        # ── HTTPS www → apex redirect ───────────────────────────
+        - traefik.http.routers.moonshadows-www.rule=Host(`www.${DOMAIN:-moonshadows.do}`)
+        - traefik.http.routers.moonshadows-www.entrypoints=websecure
+        - traefik.http.routers.moonshadows-www.tls=true
+        - traefik.http.routers.moonshadows-www.tls.certresolver=letsencryptresolver
+        - traefik.http.routers.moonshadows-www.middlewares=moonshadows-www-redirect
+        - traefik.http.routers.moonshadows-www.service=moonshadows-svc
+
+        # ── Service ─────────────────────────────────────────────
+        - traefik.http.services.moonshadows-svc.loadbalancer.server.port=80
+        - traefik.http.services.moonshadows-svc.loadbalancer.healthcheck.path=/healthz
+        - traefik.http.services.moonshadows-svc.loadbalancer.healthcheck.interval=30s
+
+        # ── Middlewares ─────────────────────────────────────────
+        - traefik.http.middlewares.moonshadows-redirect-https.redirectscheme.scheme=https
+        - traefik.http.middlewares.moonshadows-redirect-https.redirectscheme.permanent=true
+
+        - traefik.http.middlewares.moonshadows-www-redirect.redirectregex.regex=^https?://www\.(.+)$$
+        - traefik.http.middlewares.moonshadows-www-redirect.redirectregex.replacement=https://$$1
+        - traefik.http.middlewares.moonshadows-www-redirect.redirectregex.permanent=true
+
+        - traefik.http.middlewares.moonshadows-security.headers.stsSeconds=31536000
+        - traefik.http.middlewares.moonshadows-security.headers.stsIncludeSubdomains=true
+        - traefik.http.middlewares.moonshadows-security.headers.stsPreload=true
+        - traefik.http.middlewares.moonshadows-security.headers.contentTypeNosniff=true
+        - traefik.http.middlewares.moonshadows-security.headers.browserXssFilter=true
+        - traefik.http.middlewares.moonshadows-security.headers.referrerPolicy=strict-origin-when-cross-origin
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  RenaceNet:
+    external: true

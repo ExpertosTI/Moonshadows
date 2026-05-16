@@ -4,7 +4,7 @@
     {
       "name": "moonshadows",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["serve", "-l", "5183", "moonshadows-web"],
+      "runtimeArgs": ["-y", "serve", "-l", "5183", "."],
       "port": 5183
     }
   ]
