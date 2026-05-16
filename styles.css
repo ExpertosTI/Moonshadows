@@ -309,7 +309,7 @@
     filter: drop-shadow(0 30px 80px rgba(0,0,0,.6));
   }
   .ignite__svg .moon-halo,
-  .ignite__svg .moon-disc { filter: brightness(.15) saturate(.3); transition: filter 1.6s var(--ease); }
+  .ignite__svg .moon-disc { filter: brightness(0) saturate(0); opacity: .05; transition: all 1.6s var(--ease); }
   .ignite__svg .bulb-glow,
   .ignite__svg .bulb { opacity: 0; transition: opacity 1s var(--ease); }
   .ignite__svg .beam-outer,
@@ -630,7 +630,7 @@
   }
   .node.is-open .node__body { max-height: 1800px; opacity: 1; }
 
-  /* Illuminated internal content for open nodes */
+  /* Illuminated internal content for open nodes — only if body is lit OR if node is explicitly open */
   .node.is-open .node__desc,
   .node.is-open .node__list li,
   .node.is-open .node__challenge,
@@ -639,8 +639,14 @@
     opacity: 1 !important;
     text-shadow: 0 0 1px rgba(255,255,255,0.1);
   }
-  .node.is-open .node__desc { color: #fff; }
-  .node.is-open .node__list li { color: var(--cream); }
+  
+  /* If body is NOT lit, keep the REST of the nodes and content dark */
+  body:not(.is-lit) .node:not(.is-open) {
+    opacity: .35;
+    filter: grayscale(.9) brightness(.5);
+  }
+  body:not(.is-lit) .node.is-open .node__desc { color: #fff; }
+  body:not(.is-lit) .node.is-open .node__list li { color: var(--cream); }
 
   .node__body-inner {
     padding: 0 1.5rem 1.75rem;
