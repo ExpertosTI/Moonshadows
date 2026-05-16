@@ -37,45 +37,45 @@ services:
         - traefik.constraint-label=traefik-public
 
         # ── HTTP → HTTPS redirect ───────────────────────────────
-        - traefik.http.routers.moonshadows-http.rule=Host(`${DOMAIN:-moonshadows.do}`) || Host(`www.${DOMAIN:-moonshadows.do}`)
-        - traefik.http.routers.moonshadows-http.entrypoints=web
-        - traefik.http.routers.moonshadows-http.middlewares=moonshadows-redirect-https
+        - traefik.http.routers.moonshadows-${STACK_NAME:-prod}-http.rule=Host(`${DOMAIN:-moonshadows.do}`) || Host(`www.${DOMAIN:-moonshadows.do}`)
+        - traefik.http.routers.moonshadows-${STACK_NAME:-prod}-http.entrypoints=web
+        - traefik.http.routers.moonshadows-${STACK_NAME:-prod}-http.middlewares=moonshadows-${STACK_NAME:-prod}-redirect-https
 
         # ── HTTPS canonical (apex) ──────────────────────────────
-        - traefik.http.routers.moonshadows.rule=Host(`${DOMAIN:-moonshadows.do}`)
-        - traefik.http.routers.moonshadows.entrypoints=websecure
-        - traefik.http.routers.moonshadows.tls=true
-        - traefik.http.routers.moonshadows.tls.certresolver=letsencryptresolver
-        - traefik.http.routers.moonshadows.service=moonshadows-svc
-        - traefik.http.routers.moonshadows.middlewares=moonshadows-security
+        - traefik.http.routers.moonshadows-${STACK_NAME:-prod}.rule=Host(`${DOMAIN:-moonshadows.do}`)
+        - traefik.http.routers.moonshadows-${STACK_NAME:-prod}.entrypoints=websecure
+        - traefik.http.routers.moonshadows-${STACK_NAME:-prod}.tls=true
+        - traefik.http.routers.moonshadows-${STACK_NAME:-prod}.tls.certresolver=letsencryptresolver
+        - traefik.http.routers.moonshadows-${STACK_NAME:-prod}.service=moonshadows-${STACK_NAME:-prod}-svc
+        - traefik.http.routers.moonshadows-${STACK_NAME:-prod}.middlewares=moonshadows-${STACK_NAME:-prod}-security
 
         # ── HTTPS www → apex redirect ───────────────────────────
-        - traefik.http.routers.moonshadows-www.rule=Host(`www.${DOMAIN:-moonshadows.do}`)
-        - traefik.http.routers.moonshadows-www.entrypoints=websecure
-        - traefik.http.routers.moonshadows-www.tls=true
-        - traefik.http.routers.moonshadows-www.tls.certresolver=letsencryptresolver
-        - traefik.http.routers.moonshadows-www.middlewares=moonshadows-www-redirect
-        - traefik.http.routers.moonshadows-www.service=moonshadows-svc
+        - traefik.http.routers.moonshadows-${STACK_NAME:-prod}-www.rule=Host(`www.${DOMAIN:-moonshadows.do}`)
+        - traefik.http.routers.moonshadows-${STACK_NAME:-prod}-www.entrypoints=websecure
+        - traefik.http.routers.moonshadows-${STACK_NAME:-prod}-www.tls=true
+        - traefik.http.routers.moonshadows-${STACK_NAME:-prod}-www.tls.certresolver=letsencryptresolver
+        - traefik.http.routers.moonshadows-${STACK_NAME:-prod}-www.middlewares=moonshadows-${STACK_NAME:-prod}-www-redirect
+        - traefik.http.routers.moonshadows-${STACK_NAME:-prod}-www.service=moonshadows-${STACK_NAME:-prod}-svc
 
         # ── Service ─────────────────────────────────────────────
-        - traefik.http.services.moonshadows-svc.loadbalancer.server.port=80
-        - traefik.http.services.moonshadows-svc.loadbalancer.healthcheck.path=/healthz
-        - traefik.http.services.moonshadows-svc.loadbalancer.healthcheck.interval=30s
+        - traefik.http.services.moonshadows-${STACK_NAME:-prod}-svc.loadbalancer.server.port=80
+        - traefik.http.services.moonshadows-${STACK_NAME:-prod}-svc.loadbalancer.healthcheck.path=/healthz
+        - traefik.http.services.moonshadows-${STACK_NAME:-prod}-svc.loadbalancer.healthcheck.interval=30s
 
         # ── Middlewares ─────────────────────────────────────────
-        - traefik.http.middlewares.moonshadows-redirect-https.redirectscheme.scheme=https
-        - traefik.http.middlewares.moonshadows-redirect-https.redirectscheme.permanent=true
+        - traefik.http.middlewares.moonshadows-${STACK_NAME:-prod}-redirect-https.redirectscheme.scheme=https
+        - traefik.http.middlewares.moonshadows-${STACK_NAME:-prod}-redirect-https.redirectscheme.permanent=true
 
-        - traefik.http.middlewares.moonshadows-www-redirect.redirectregex.regex=^https?://www\.(.+)$$
-        - traefik.http.middlewares.moonshadows-www-redirect.redirectregex.replacement=https://$$1
-        - traefik.http.middlewares.moonshadows-www-redirect.redirectregex.permanent=true
+        - traefik.http.middlewares.moonshadows-${STACK_NAME:-prod}-www-redirect.redirectregex.regex=^https?://www\.(.+)$$
+        - traefik.http.middlewares.moonshadows-${STACK_NAME:-prod}-www-redirect.redirectregex.replacement=https://$$1
+        - traefik.http.middlewares.moonshadows-${STACK_NAME:-prod}-www-redirect.redirectregex.permanent=true
 
-        - traefik.http.middlewares.moonshadows-security.headers.stsSeconds=31536000
-        - traefik.http.middlewares.moonshadows-security.headers.stsIncludeSubdomains=true
-        - traefik.http.middlewares.moonshadows-security.headers.stsPreload=true
-        - traefik.http.middlewares.moonshadows-security.headers.contentTypeNosniff=true
-        - traefik.http.middlewares.moonshadows-security.headers.browserXssFilter=true
-        - traefik.http.middlewares.moonshadows-security.headers.referrerPolicy=strict-origin-when-cross-origin
+        - traefik.http.middlewares.moonshadows-${STACK_NAME:-prod}-security.headers.stsSeconds=31536000
+        - traefik.http.middlewares.moonshadows-${STACK_NAME:-prod}-security.headers.stsIncludeSubdomains=true
+        - traefik.http.middlewares.moonshadows-${STACK_NAME:-prod}-security.headers.stsPreload=true
+        - traefik.http.middlewares.moonshadows-${STACK_NAME:-prod}-security.headers.contentTypeNosniff=true
+        - traefik.http.middlewares.moonshadows-${STACK_NAME:-prod}-security.headers.browserXssFilter=true
+        - traefik.http.middlewares.moonshadows-${STACK_NAME:-prod}-security.headers.referrerPolicy=strict-origin-when-cross-origin
 
     logging:
       driver: json-file
