@@ -309,7 +309,7 @@
     filter: drop-shadow(0 30px 80px rgba(0,0,0,.6));
   }
   .ignite__svg .moon-halo,
-  .ignite__svg .moon-disc { filter: brightness(0) saturate(0); opacity: .05; transition: all 1.6s var(--ease); }
+  .ignite__svg .moon-disc { filter: brightness(.2) saturate(.1); opacity: .18; transition: all 1.6s var(--ease); }
   .ignite__svg .bulb-glow,
   .ignite__svg .bulb { opacity: 0; transition: opacity 1s var(--ease); }
   .ignite__svg .beam-outer,
