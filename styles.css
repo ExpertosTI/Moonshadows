@@ -490,9 +490,10 @@
   }
   .node.is-open {
     border-color: var(--gold);
+    background: color-mix(in oklch, var(--night-3) 40%, var(--night));
     box-shadow:
-      0 30px 80px -20px rgba(0,0,0,.6),
-      0 0 60px -10px color-mix(in oklch, var(--gold) 25%, transparent);
+      0 30px 100px -20px rgba(0,0,0,.8),
+      0 0 80px -10px color-mix(in oklch, var(--gold) 45%, transparent);
   }
 
   .node__head {
@@ -865,13 +866,13 @@
    ============================================================ */
 @layer responsive {
   @media (max-width: 880px) {
-    .nav { padding: .85rem 1rem; gap: .5rem; }
-    .nav__brand img { height: 36px; filter: drop-shadow(0 0 18px rgba(232,163,23,.35)); }
-    .nav__right { gap: .5rem; }
-    .nav__light { width: 36px; height: 36px; }
-    .nav__light svg { width: 16px; height: 16px; }
-    .nav__cta { padding: .5rem .8rem; font-size: .65rem; letter-spacing: .1em; }
-    .nav__cta i { width: 18px; height: 18px; font-size: .75rem; }
+    .nav { padding: .65rem .75rem; gap: .4rem; flex-wrap: nowrap; align-items: center; }
+    .nav__brand img { height: 28px; filter: drop-shadow(0 0 12px rgba(232,163,23,.35)); }
+    .nav__right { gap: .4rem; flex-wrap: nowrap; align-items: center; }
+    .nav__light { width: 34px; height: 34px; flex: 0 0 34px; }
+    .nav__light svg { width: 15px; height: 15px; }
+    .nav__cta { padding: .45rem .65rem; font-size: .62rem; letter-spacing: .08em; flex-shrink: 0; }
+    .nav__cta i { width: 16px; height: 16px; font-size: .65rem; }
 
     .progress {
       display: flex !important; flex-direction: row;
@@ -981,6 +982,15 @@
       gap: 1.25rem;
       padding: 1.1rem 1rem 1.25rem;
     }
+
+    /* Methodology Mobile Grid */
+    .methodology__grid {
+      grid-template-columns: 1fr !important;
+      gap: 1rem !important;
+      padding: 0 1rem !important;
+    }
+    .node__model { opacity: 1 !important; transform: none !important; }
+
     .node__list li { font-size: .87rem; }
     .node__model { padding: 1rem; gap: .8rem; }
     .node__model-icon { width: 38px; height: 38px; flex: 0 0 38px; }
