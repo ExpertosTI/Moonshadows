@@ -427,6 +427,24 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+-- ── 8. Privileges and Grants ────────────────────────────────
+-- Grant usage on schema public to both anon and authenticated
+GRANT USAGE ON SCHEMA public TO anon, authenticated;
+
+-- Grant ingest permissions (INSERT/UPDATE) to anon role
+GRANT INSERT, UPDATE ON TABLE sentinel_sessions TO anon;
+GRANT INSERT ON TABLE sentinel_events TO anon;
+GRANT INSERT ON TABLE sentinel_performance TO anon;
+GRANT INSERT ON TABLE sentinel_errors TO anon;
+GRANT INSERT ON TABLE sentinel_admin_audit TO anon;
+
+-- Grant select permissions on tables and views to both roles (filtered by RLS)
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO anon, authenticated;
+GRANT SELECT ON ALL VIEWS IN SCHEMA public TO anon, authenticated;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO authenticated;
+GRANT ALL PRIVILEGES ON ALL VIEWS IN SCHEMA public TO authenticated;
+
+
 -- ============================================================
 -- END OF SCHEMA · v1.0
 -- ============================================================
