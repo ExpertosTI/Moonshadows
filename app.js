@@ -100,27 +100,33 @@
     },
     async init() {
       const stats = this.getStats();
+      let isNewSession = false;
       if (!stats.session_id) {
         stats.session_id = 'ms_' + Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
         this.saveStats(stats);
+        isNewSession = true;
       }
-      try {
-        await fetch('/api/insforge/leads', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Prefer': 'resolution=ignore-duplicates'
-          },
-          body: JSON.stringify({
-            project_id: 'moonshadows',
-            channel: 'telemetry',
-            contact_value: `Session:${stats.session_id}`,
-            metadata: stats,
-            created_at: new Date().toISOString()
-          })
-        });
-      } catch (err) {
-        console.warn('Insforge lead init warning:', err);
+      if (isNewSession) {
+        try {
+          await fetch('/api/insforge/leads', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify({
+              project_id: 'moonshadows',
+              channel: 'telemetry',
+              contact_value: `Session:${stats.session_id}`,
+              metadata: stats,
+              created_at: new Date().toISOString()
+            })
+          });
+        } catch (err) {
+          console.warn('Insforge lead init warning:', err);
+        }
+      } else {
+        this.sync();
       }
       
       setInterval(() => {
@@ -411,9 +417,11 @@
 
   let activeTab = 'session'; // 'session' or 'global'
 
-  const fetchAndRenderGlobal = async () => {
-    try {
-      const res = await fetch('/api/insforge/leads?project_id=eq.moonshadows&limit=200');
+      const res = await fetch('/api/insforge/leads?project_id=eq.moonshadows&limit=200', {
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
       if (!res.ok) throw new Error('Insforge HTTP error');
       const leads = await res.json();
       
