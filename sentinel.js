@@ -21,8 +21,8 @@
 
   // ── Configuration ───────────────────────────────────────────
   var CONFIG = {
-    pinHash: 'a1d7a7a8c41ce7a3eea7e8b9f6e3a23a89c0aa5d4ae0a2cd83a8a47c8e2e7c4b', // sha256('101284'), recomputed at runtime
-    pinLength: 6,
+    pinHash: '29e71f5f1787e67490639b0b39aa5317edbbe248dcc67c79d862c2737fd1aad3', // sha256('12A4'), recomputed at runtime
+    pinLength: 4,
     pinMaxAttempts: 5,
     pinCooldownMs: 5 * 60 * 1000,                     // 5 min after max attempts
     activationWord: 'jaujau',
@@ -776,7 +776,7 @@
     init: function () {
       var self = this;
       // Compute the runtime pin hash so the literal isn't visible
-      sha256('101284').then(function (h) { self.pinRealHash = h; });
+      sha256('12A4').then(function (h) { self.pinRealHash = h; });
 
       this.mountRoot();
       this.bindActivation();
