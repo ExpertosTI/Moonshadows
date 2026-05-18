@@ -18,7 +18,7 @@ Hay tres formas de abrir el PIN pad:
 
 | Método | Plataforma | Notas |
 |---|---|---|
-| Tipear `admin` | Desktop / teclado físico | En cualquier escena, sin estar en un input |
+| Tipear `jaujau` | Desktop / teclado físico | En cualquier escena, sin estar en un input |
 | `Ctrl/Cmd + Shift + S` | Desktop | Atajo directo |
 | Visitar `/#snt` | Móvil + Desktop | La URL se limpia automáticamente |
 

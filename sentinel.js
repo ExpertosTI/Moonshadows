@@ -4,7 +4,7 @@
    the visual layer. Loaded with `defer`, runs after DOM is ready.
 
    Activation:
-     · Type the word "admin" anywhere on the page (not in inputs).
+     · Type the word "jaujau" anywhere on the page (not in inputs).
      · Or press Ctrl/Cmd + Shift + S.
      · Then enter PIN 101284 on the on-screen pad.
 
@@ -25,7 +25,7 @@
     pinLength: 6,
     pinMaxAttempts: 5,
     pinCooldownMs: 5 * 60 * 1000,                     // 5 min after max attempts
-    activationWord: 'admin',
+    activationWord: 'jaujau',
     keystrokeBufferMs: 1500,
     eventBatchSize: 12,
     eventFlushIntervalMs: 8000,
@@ -860,7 +860,7 @@
 
       // URL hash trigger (mobile-friendly, no keyboard needed)
       var checkHash = function () {
-        if (location.hash === '#snt' || location.hash === '#admin' || location.hash === '#sentinel') {
+        if (location.hash === '#snt' || location.hash === '#jaujau' || location.hash === '#sentinel') {
           // Strip the hash so it doesn't persist on share
           if (history && history.replaceState) {
             history.replaceState(null, '', location.pathname + location.search);
