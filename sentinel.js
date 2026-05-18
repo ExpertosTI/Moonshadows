@@ -839,6 +839,7 @@
               '<button class="snt-console__tab" data-tab="behavior">Comportamiento</button>' +
               '<button class="snt-console__tab" data-tab="perf">Rendimiento</button>' +
               '<button class="snt-console__tab" data-tab="errors">Errores</button>' +
+              '<button class="snt-console__tab" data-tab="seo">SEO</button>' +
             '</nav>' +
             '<div class="snt-console__actions">' +
               '<button class="snt-console__btn" data-action="refresh">↻ Refrescar</button>' +
@@ -1110,6 +1111,7 @@
       else if (tab === 'behavior') this.renderBehavior(body);
       else if (tab === 'perf')     this.renderPerf(body);
       else if (tab === 'errors')   this.renderErrors(body);
+      else if (tab === 'seo')      this.renderSEO(body);
     },
 
     fmtDuration: function (sec) {
@@ -1513,6 +1515,159 @@
                    '<td class="tag">' + (e.source || '—') + (e.lineno ? ':' + e.lineno : '') + '</td></tr>';
           }).join('') + '</tbody></table>';
       });
+    },
+
+    renderSEO: function (body) {
+      var titleText = document.title || '';
+      var descMeta = document.querySelector('meta[name="description"]');
+      var descText = descMeta ? (descMeta.getAttribute('content') || '').trim() : '';
+      
+      var h1s = Array.from(document.querySelectorAll('h1'));
+      var totalH1s = h1s.length;
+      
+      var imgs = Array.from(document.querySelectorAll('img'));
+      var missingAlt = imgs.filter(function (img) { return !img.getAttribute('alt'); }).length;
+      
+      var ogTitle = document.querySelector('meta[property="og:title"]');
+      var ogDesc = document.querySelector('meta[property="og:description"]');
+      var ogImg = document.querySelector('meta[property="og:image"]');
+      var ogPresent = ogTitle && ogDesc && ogImg;
+      
+      var hasSchema = !!document.querySelector('script[type="application/ld+json"]');
+      
+      var semanticTags = ['header', 'nav', 'main', 'footer', 'section'];
+      var presentSemantics = semanticTags.filter(function (t) { return !!document.querySelector(t); }).length;
+      
+      var score = 0;
+      var checks = [];
+      
+      if (titleText) {
+        if (titleText.length >= 30 && titleText.length <= 65) {
+          score += 15;
+          checks.push({ name: 'Etiqueta Title', ok: true, msg: 'Presente y con longitud óptima (' + titleText.length + ' carac.).' });
+        } else {
+          score += 10;
+          checks.push({ name: 'Etiqueta Title', ok: true, warning: true, msg: 'Presente, pero longitud de ' + titleText.length + ' carac. no recomendada (óptimo: 30-65).' });
+        }
+      } else {
+        checks.push({ name: 'Etiqueta Title', ok: false, msg: 'Falta la etiqueta de título de la página.' });
+      }
+      
+      if (descText) {
+        if (descText.length >= 110 && descText.length <= 160) {
+          score += 15;
+          checks.push({ name: 'Meta Descripción', ok: true, msg: 'Presente y con longitud perfecta (' + descText.length + ' carac.).' });
+        } else {
+          score += 10;
+          checks.push({ name: 'Meta Descripción', ok: true, warning: true, msg: 'Presente, pero longitud de ' + descText.length + ' carac. fuera de rango (óptimo: 110-160).' });
+        }
+      } else {
+        checks.push({ name: 'Meta Descripción', ok: false, msg: 'Falta la meta descripción del sitio.' });
+      }
+      
+      if (totalH1s === 1) {
+        score += 15;
+        checks.push({ name: 'Estructura H1', ok: true, msg: 'Perfecto. Exactamente una etiqueta H1 presente (para lectores de pantalla).' });
+      } else if (totalH1s > 1) {
+        score += 5;
+        checks.push({ name: 'Estructura H1', ok: true, warning: true, msg: 'Múltiples H1 (' + totalH1s + ') detectados. Se recomienda solo uno principal.' });
+      } else {
+        checks.push({ name: 'Estructura H1', ok: false, msg: 'Falta la etiqueta H1 principal para SEO.' });
+      }
+      
+      if (presentSemantics >= 4) {
+        score += 15;
+        checks.push({ name: 'Estructura Semántica', ok: true, msg: 'Excelente. Uso correcto de elementos semánticos HTML5 (' + presentSemantics + '/' + semanticTags.length + ').' });
+      } else {
+        score += 8;
+        checks.push({ name: 'Estructura Semántica', ok: true, warning: true, msg: 'Se detectan pocos elementos semánticos HTML5 (' + presentSemantics + '/' + semanticTags.length + ').' });
+      }
+      
+      if (imgs.length === 0) {
+        score += 10;
+        checks.push({ name: 'Imágenes (ALT)', ok: true, msg: 'Perfecto. No hay imágenes que requieran textos alternativos.' });
+      } else if (missingAlt === 0) {
+        score += 10;
+        checks.push({ name: 'Imágenes (ALT)', ok: true, msg: 'Perfecto. Todas las imágenes (' + imgs.length + ') tienen atributo ALT.' });
+      } else {
+        var pctAlt = Math.max(0, 10 - missingAlt * 2);
+        score += pctAlt;
+        checks.push({ name: 'Imágenes (ALT)', ok: false, msg: missingAlt + ' de ' + imgs.length + ' imágenes no tienen texto alternativo (ALT).' });
+      }
+      
+      if (ogPresent) {
+        score += 15;
+        checks.push({ name: 'Etiquetas OpenGraph', ok: true, msg: 'Configuradas correctamente (og:title, og:description, og:image).' });
+      } else {
+        checks.push({ name: 'Etiquetas OpenGraph', ok: false, msg: 'Faltan configurar algunas etiquetas OpenGraph para redes sociales.' });
+      }
+      
+      if (hasSchema) {
+        score += 15;
+        checks.push({ name: 'Esquema de Datos (JSON-LD)', ok: true, msg: 'Perfecto. Datos estructurados de Schema.org cargados correctamente.' });
+      } else {
+        checks.push({ name: 'Esquema de Datos (JSON-LD)', ok: false, msg: 'Faltan datos estructurados JSON-LD para indexación premium.' });
+      }
+      
+      score = Math.min(100, Math.round(score));
+      
+      var rate = 'Excelente';
+      var colorClass = 'snt-pill--ok';
+      if (score < 70) {
+        rate = 'Mejorable';
+        colorClass = 'snt-pill--bad';
+      } else if (score < 90) {
+        rate = 'Bueno';
+        colorClass = 'snt-pill--warn';
+      }
+      
+      body.innerHTML = 
+        '<div class="snt-grid">' +
+          '<div class="snt-panel" style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px 24px;">' +
+            '<div class="snt-panel__head" style="margin-bottom: 20px;"><div class="snt-panel__title">Puntuación SEO</div></div>' +
+            '<div style="position: relative; width: 140px; height: 140px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">' +
+              '<svg style="transform: rotate(-90deg); width: 140px; height: 140px; position: absolute;">' +
+                '<circle cx="70" cy="70" r="60" stroke="rgba(255,255,255,0.06)" stroke-width="8" fill="transparent" />' +
+                '<circle cx="70" cy="70" r="60" stroke="' + (score >= 90 ? '#10b981' : (score >= 70 ? '#f59e0b' : '#ef4444')) + '" stroke-width="8" fill="transparent" stroke-dasharray="377" stroke-dashoffset="' + (377 - (377 * score / 100)) + '" style="transition: stroke-dashoffset 1s ease-in-out;" />' +
+              '</svg>' +
+              '<div style="font-size: 36px; font-weight: 700; color: #fff;">' + score + '<span style="font-size: 16px; font-weight: 400; color: rgba(255,255,255,0.4);">/100</span></div>' +
+            '</div>' +
+            '<div><span class="snt-pill ' + colorClass + '" style="font-size: 14px; padding: 4px 12px; font-weight: 600;">' + rate + '</span></div>' +
+          '</div>' +
+          
+          '<div class="snt-panel snt-panel--wide">' +
+            '<div class="snt-panel__head"><div class="snt-panel__title">Simulador de Google Search</div><span class="snt-panel__meta">Buscador</span></div>' +
+            '<div style="background: #17171c; border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 18px 24px; text-align: left; font-family: arial, sans-serif; max-width: 600px; margin-top: 10px; box-shadow: inset 0 2px 8px rgba(0,0,0,0.2);">' +
+              '<div style="font-size: 12px; color: #bdc1c6; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">' +
+                '<span style="display:inline-block; width:18px; height:18px; border-radius:50%; background:#2a2b36; text-align:center; line-height:18px; font-size:10px; color:#fff; font-weight:bold;">M</span>' +
+                '<span>https://moonshadowspro.com</span>' +
+                '<span style="font-size: 10px; color: #9aa0a6;">▼</span>' +
+              '</div>' +
+              '<a href="#" onclick="return false;" style="font-size: 20px; color: #8ab4f8; text-decoration: none; display: block; margin-bottom: 4px; line-height: 1.3; font-weight: 400;" onmouseover="this.style.textDecoration=\'underline\'" onmouseout="this.style.textDecoration=\'none\'">' +
+                (titleText || 'Moonshadows · Consultoría Estratégica en Relaciones Públicas') +
+              '</a>' +
+              '<div style="font-size: 14px; color: #bdc1c6; line-height: 1.4; word-wrap: break-word;">' +
+                (descText || 'Metodología boutique centrada en el análisis, estrategia y despliegue técnico de alta fidelidad.') +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        
+        '<div class="snt-grid" style="margin-top: 20px;">' +
+          '<div class="snt-panel snt-panel--wide">' +
+            '<div class="snt-panel__head"><div class="snt-panel__title">Auditoría Detallada del DOM</div></div>' +
+            '<table class="snt-table"><thead><tr><th>Verificación</th><th>Estado</th><th>Detalle Técnico</th></tr></thead><tbody>' +
+              checks.map(function (c) {
+                var symbol = c.ok ? (c.warning ? '⚠' : '✔') : '✖';
+                var pillClass = c.ok ? (c.warning ? 'snt-pill--warn' : 'snt-pill--ok') : 'snt-pill--bad';
+                return '<tr>' +
+                         '<td style="font-weight: 600; color: #fff;">' + c.name + '</td>' +
+                         '<td class="tag"><span class="snt-pill ' + pillClass + '">' + symbol + '</span></td>' +
+                         '<td>' + c.msg + '</td>' +
+                       '</tr>';
+              }).join('') + '</tbody></table>' +
+          '</div>' +
+        '</div>';
     },
 
     emptyHTML: function (msg) {
