@@ -1538,9 +1538,14 @@
       var semanticTags = ['header', 'nav', 'main', 'footer', 'section'];
       var presentSemantics = semanticTags.filter(function (t) { return !!document.querySelector(t); }).length;
       
+      var isHTTPS = window.location.protocol === 'https:';
+      var hasViewport = !!document.querySelector('meta[name="viewport"]');
+      var hasFavicon = !!document.querySelector('link[rel*="icon"]');
+      
       var score = 0;
       var checks = [];
       
+      // 1. Etiqueta Title (Max 15)
       if (titleText) {
         if (titleText.length >= 30 && titleText.length <= 65) {
           score += 15;
@@ -1553,6 +1558,7 @@
         checks.push({ name: 'Etiqueta Title', ok: false, msg: 'Falta la etiqueta de título de la página.' });
       }
       
+      // 2. Meta Descripción (Max 15)
       if (descText) {
         if (descText.length >= 110 && descText.length <= 160) {
           score += 15;
@@ -1565,6 +1571,7 @@
         checks.push({ name: 'Meta Descripción', ok: false, msg: 'Falta la meta descripción del sitio.' });
       }
       
+      // 3. Estructura H1 (Max 15)
       if (totalH1s === 1) {
         score += 15;
         checks.push({ name: 'Estructura H1', ok: true, msg: 'Perfecto. Exactamente una etiqueta H1 presente (para lectores de pantalla).' });
@@ -1575,6 +1582,7 @@
         checks.push({ name: 'Estructura H1', ok: false, msg: 'Falta la etiqueta H1 principal para SEO.' });
       }
       
+      // 4. Estructura Semántica (Max 15)
       if (presentSemantics >= 4) {
         score += 15;
         checks.push({ name: 'Estructura Semántica', ok: true, msg: 'Excelente. Uso correcto de elementos semánticos HTML5 (' + presentSemantics + '/' + semanticTags.length + ').' });
@@ -1583,6 +1591,7 @@
         checks.push({ name: 'Estructura Semántica', ok: true, warning: true, msg: 'Se detectan pocos elementos semánticos HTML5 (' + presentSemantics + '/' + semanticTags.length + ').' });
       }
       
+      // 5. Imágenes ALT (Max 10)
       if (imgs.length === 0) {
         score += 10;
         checks.push({ name: 'Imágenes (ALT)', ok: true, msg: 'Perfecto. No hay imágenes que requieran textos alternativos.' });
@@ -1595,18 +1604,44 @@
         checks.push({ name: 'Imágenes (ALT)', ok: false, msg: missingAlt + ' de ' + imgs.length + ' imágenes no tienen texto alternativo (ALT).' });
       }
       
+      // 6. OpenGraph (Max 10)
       if (ogPresent) {
-        score += 15;
+        score += 10;
         checks.push({ name: 'Etiquetas OpenGraph', ok: true, msg: 'Configuradas correctamente (og:title, og:description, og:image).' });
       } else {
         checks.push({ name: 'Etiquetas OpenGraph', ok: false, msg: 'Faltan configurar algunas etiquetas OpenGraph para redes sociales.' });
       }
       
+      // 7. Schema JSON-LD (Max 10)
       if (hasSchema) {
-        score += 15;
+        score += 10;
         checks.push({ name: 'Esquema de Datos (JSON-LD)', ok: true, msg: 'Perfecto. Datos estructurados de Schema.org cargados correctamente.' });
       } else {
         checks.push({ name: 'Esquema de Datos (JSON-LD)', ok: false, msg: 'Faltan datos estructurados JSON-LD para indexación premium.' });
+      }
+      
+      // 8. SSL / HTTPS (Max 5)
+      if (isHTTPS) {
+        score += 5;
+        checks.push({ name: 'Seguridad SSL (HTTPS)', ok: true, msg: 'Excelente. El sitio se sirve a través de un canal HTTPS cifrado y seguro.' });
+      } else {
+        checks.push({ name: 'Seguridad SSL (HTTPS)', ok: false, msg: 'El sitio no utiliza conexión HTTPS segura (crítico para Google).' });
+      }
+      
+      // 9. Viewport Responsivo (Max 5)
+      if (hasViewport) {
+        score += 5;
+        checks.push({ name: 'Diseño Responsivo (Viewport)', ok: true, msg: 'Presente. Metaetiqueta viewport detectada para correcta adaptación móvil.' });
+      } else {
+        checks.push({ name: 'Diseño Responsivo (Viewport)', ok: false, msg: 'Falta la metaetiqueta viewport en el head de la página.' });
+      }
+      
+      // 10. Favicon de Google (Max 5)
+      if (hasFavicon) {
+        score += 5;
+        checks.push({ name: 'Favicon del Sitio', ok: true, msg: 'Presente. Logotipo e icono definidos en el head para visualización en buscadores.' });
+      } else {
+        checks.push({ name: 'Favicon del Sitio', ok: false, msg: 'Falta configurar el enlace del icono de acceso directo (favicon).' });
       }
       
       score = Math.min(100, Math.round(score));
@@ -1638,12 +1673,18 @@
           '<div class="snt-panel snt-panel--wide">' +
             '<div class="snt-panel__head"><div class="snt-panel__title">Simulador de Google Search</div><span class="snt-panel__meta">Buscador</span></div>' +
             '<div style="background: #17171c; border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 18px 24px; text-align: left; font-family: arial, sans-serif; max-width: 600px; margin-top: 10px; box-shadow: inset 0 2px 8px rgba(0,0,0,0.2);">' +
-              '<div style="font-size: 12px; color: #bdc1c6; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">' +
-                '<span style="display:inline-block; width:18px; height:18px; border-radius:50%; background:#2a2b36; text-align:center; line-height:18px; font-size:10px; color:#fff; font-weight:bold;">M</span>' +
-                '<span>https://moonshadowspro.com</span>' +
-                '<span style="font-size: 10px; color: #9aa0a6;">▼</span>' +
+              '<div style="font-size: 12px; color: #bdc1c6; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">' +
+                '<div style="width: 26px; height: 26px; border-radius: 50%; background: #202124; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.08); flex-shrink: 0; overflow: hidden;">' +
+                  '<img src="/assets/logo-icon.png" style="width: 14px; height: 14px; object-fit: contain;" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'block\';" />' +
+                  '<span style="display: none; font-size: 11px; font-weight: bold; color: #fff; font-family: sans-serif;">M</span>' +
+                '</div>' +
+                '<div style="display: flex; flex-direction: column;">' +
+                  '<span style="font-weight: 500; color: #fff; font-size: 13px;">Moonshadows</span>' +
+                  '<span style="font-size: 11px; color: #9aa0a6; line-height: 1.2;">https://moonshadowspro.com</span>' +
+                '</div>' +
+                '<span style="font-size: 10px; color: #9aa0a6; margin-left: auto;">▼</span>' +
               '</div>' +
-              '<a href="#" onclick="return false;" style="font-size: 20px; color: #8ab4f8; text-decoration: none; display: block; margin-bottom: 4px; line-height: 1.3; font-weight: 400;" onmouseover="this.style.textDecoration=\'underline\'" onmouseout="this.style.textDecoration=\'none\'">' +
+              '<a href="#" onclick="return false;" style="font-size: 20px; color: #8ab4f8; text-decoration: none; display: block; margin-bottom: 6px; line-height: 1.3; font-weight: 400;" onmouseover="this.style.textDecoration=\'underline\'" onmouseout="this.style.textDecoration=\'none\'">' +
                 (titleText || 'Moonshadows · Consultoría Estratégica en Relaciones Públicas') +
               '</a>' +
               '<div style="font-size: 14px; color: #bdc1c6; line-height: 1.4; word-wrap: break-word;">' +
