@@ -15,6 +15,48 @@
   const root = document.documentElement;
   const body = document.body;
 
+  /* ── Sentinel Telemetry Engine ────────────────────────── */
+  const Sentinel = {
+    getStats() {
+      const defaultStats = {
+        clicks: { whatsapp: 0, cta: 0, services: 0 },
+        time: { scene_0: 0, scene_1: 0, scene_2: 0, scene_3: 0, total: 0 },
+        maxScroll: 0
+      };
+      try {
+        return JSON.parse(localStorage.getItem('ms_sentinel_stats')) || defaultStats;
+      } catch {
+        return defaultStats;
+      }
+    },
+    saveStats(stats) {
+      localStorage.setItem('ms_sentinel_stats', JSON.stringify(stats));
+    },
+    trackClick(category) {
+      const stats = this.getStats();
+      if (stats.clicks[category] !== undefined) {
+        stats.clicks[category]++;
+        this.saveStats(stats);
+      }
+    },
+    trackTime(scene, seconds) {
+      const stats = this.getStats();
+      const key = `scene_${scene}`;
+      if (stats.time[key] !== undefined) {
+        stats.time[key] += seconds;
+        stats.time.total += seconds;
+        this.saveStats(stats);
+      }
+    },
+    trackScroll(sceneNum) {
+      const stats = this.getStats();
+      if (sceneNum > stats.maxScroll) {
+        stats.maxScroll = sceneNum;
+        this.saveStats(stats);
+      }
+    }
+  };
+
   /* ── Cursor / torch tracking (desktop only) ─────────────── */
   if (!isTouch) {
     let raf = 0, mx = innerWidth / 2, my = innerHeight / 2;
@@ -56,6 +98,7 @@
         const s = best.target.dataset.scene;
         body.dataset.stage = s;
         dots.forEach((d) => d.classList.toggle('is-active', d.dataset.go === s));
+        Sentinel.trackScroll(parseInt(s, 10));
       }
     }, { threshold: [0.25, 0.5, 0.75] });
     scenes.forEach((s) => io.observe(s));
@@ -234,8 +277,192 @@
     });
     setTimeout(() => { busy = false; }, 600);
   };
+  /* ── Sentinel Dwell Time Clock (Passive every second) ──── */
+  setInterval(() => {
+    const activeStage = body.dataset.stage || '0';
+    Sentinel.trackTime(activeStage, 1);
+  }, 1000);
+
+  /* ── Sentinel Click Event Capture ───────────────────────── */
+  addEventListener('click', (e) => {
+    const target = e.target;
+    if (!target) return;
+    if (target.closest('a[href*="wa.me"]')) {
+      Sentinel.trackClick('whatsapp');
+    } else if (target.closest('.nav__brand, .nav__cta, .magnet, .chip')) {
+      Sentinel.trackClick('cta');
+    } else if (target.closest('.node__head')) {
+      Sentinel.trackClick('services');
+    }
+  }, { passive: true });
+
+  /* ── Sentinel Dashboard UI Controller ────────────────────── */
+  const sentinelDash = document.getElementById('sentinel-dashboard');
+  const sentinelClose = document.getElementById('sentinel-close');
+  const sentinelReset = document.getElementById('sentinel-reset');
+
+  const renderSentinel = () => {
+    const stats = Sentinel.getStats();
+
+    // 1. Text values
+    document.getElementById('sentinel-stat-wa').textContent = stats.clicks.whatsapp;
+    document.getElementById('sentinel-stat-cta').textContent = stats.clicks.cta;
+    document.getElementById('sentinel-stat-services').textContent = stats.clicks.services;
+    document.getElementById('sentinel-stat-total').textContent = `${stats.time.total}s`;
+    document.getElementById('sentinel-stat-scroll').textContent = `Scene ${stats.maxScroll}`;
+
+    // 2. Click Conversion SVG Bar Chart
+    const maxClick = Math.max(stats.clicks.whatsapp, stats.clicks.cta, stats.clicks.services, 1);
+    const hWa = (stats.clicks.whatsapp / maxClick) * 30;
+    const hCta = (stats.clicks.cta / maxClick) * 30;
+    const hSrv = (stats.clicks.services / maxClick) * 30;
+
+    const rWa = document.getElementById('sentinel-chart-bar-wa');
+    const rCta = document.getElementById('sentinel-chart-bar-cta');
+    const rSrv = document.getElementById('sentinel-chart-bar-srv');
+
+    if (rWa && rCta && rSrv) {
+      rWa.setAttribute('height', hWa);
+      rWa.setAttribute('y', 35 - hWa);
+      rCta.setAttribute('height', hCta);
+      rCta.setAttribute('y', 35 - hCta);
+      rSrv.setAttribute('height', hSrv);
+      rSrv.setAttribute('y', 35 - hSrv);
+    }
+
+    // 3. Dwell Time proportional bars
+    const maxTime = Math.max(stats.time.scene_0, stats.time.scene_1, stats.time.scene_2, stats.time.scene_3, 1);
+    for (let i = 0; i <= 3; i++) {
+      const sec = stats.time[`scene_${i}`];
+      const pct = (sec / maxTime) * 100;
+      const fillEl = document.getElementById(`sentinel-bar-s${i}`);
+      const valEl = document.getElementById(`sentinel-val-s${i}`);
+      if (fillEl) fillEl.style.width = `${pct}%`;
+      if (valEl) valEl.textContent = `${sec}s`;
+    }
+
+    // 4. Scroll depth circle dasharray
+    const depthPct = (stats.maxScroll / 3) * 100;
+    const depthEl = document.getElementById('sentinel-radial-depth');
+    const lblEl = document.getElementById('sentinel-radial-lbl');
+    if (depthEl) depthEl.setAttribute('stroke-dasharray', `${depthPct}, 100`);
+    if (lblEl) lblEl.textContent = `${Math.round(depthPct)}%`;
+  };
+
+  /* ── Sentinel PIN Verification & Dashboard Toggle ───────── */
+  const pinPadEl = document.getElementById('sentinel-pinpad');
+  const pinCancelBtn = document.getElementById('sentinel-pinpad-cancel');
+  const pinDots = [...document.querySelectorAll('.pin-dot')];
+  let enteredPin = '';
+
+  const resetPinPad = () => {
+    enteredPin = '';
+    if (pinPadEl) pinPadEl.classList.remove('is-error');
+    pinDots.forEach(dot => dot.classList.remove('is-active'));
+  };
+
+  const processPinDigit = (digit) => {
+    if (enteredPin.length < 6) {
+      enteredPin += digit;
+      pinDots.forEach((dot, idx) => dot.classList.toggle('is-active', idx < enteredPin.length));
+
+      if (enteredPin.length === 6) {
+        if (enteredPin === '101284') {
+          // Success authentication transition
+          sentinelDash.classList.add('is-authenticated');
+          renderSentinel();
+        } else {
+          // Error shake and reset
+          if (pinPadEl) pinPadEl.classList.add('is-error');
+          setTimeout(() => {
+            resetPinPad();
+          }, 600);
+        }
+      }
+    }
+  };
+
+  const removePinDigit = () => {
+    if (enteredPin.length > 0) {
+      enteredPin = enteredPin.slice(0, -1);
+      pinDots.forEach((dot, idx) => dot.classList.toggle('is-active', idx < enteredPin.length));
+    }
+  };
+
+  // Click handler for PIN pad buttons
+  document.querySelectorAll('.pin-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const num = btn.dataset.num;
+      if (num !== undefined) {
+        processPinDigit(num);
+      } else if (btn.classList.contains('pin-btn--clear')) {
+        resetPinPad();
+      } else if (btn.classList.contains('pin-btn--back')) {
+        removePinDigit();
+      }
+    });
+  });
+
+  const toggleSentinel = () => {
+    if (!sentinelDash) return;
+    const active = sentinelDash.classList.toggle('is-active');
+    sentinelDash.setAttribute('aria-hidden', active ? 'false' : 'true');
+    
+    // Always clear authentication state and reset PIN entry upon toggle
+    sentinelDash.classList.remove('is-authenticated');
+    resetPinPad();
+
+    if (active) {
+      renderSentinel(); // Perform background rendering
+    }
+  };
+
+  // Close console hooks
+  sentinelClose?.addEventListener('click', () => toggleSentinel());
+  pinCancelBtn?.addEventListener('click', () => toggleSentinel());
+
+  // Click reset stats
+  sentinelReset?.addEventListener('click', () => {
+    if (confirm('¿Restablecer todas las métricas de telemetría local?')) {
+      localStorage.removeItem('ms_sentinel_stats');
+      renderSentinel();
+    }
+  });
+
+  // Passcode Keyboard Trigger & General Keydown Handlers
+  let typed = '';
   addEventListener('keydown', (e) => {
     if (e.target instanceof HTMLElement && e.target.matches('input, textarea')) return;
+
+    // 1. PIN Keyboard Entry if Sentinel is open but not authenticated
+    if (sentinelDash && sentinelDash.classList.contains('is-active') && !sentinelDash.classList.contains('is-authenticated')) {
+      if (/^[0-9]$/.test(e.key)) {
+        e.preventDefault();
+        processPinDigit(e.key);
+        return;
+      }
+      if (e.key === 'Backspace') {
+        e.preventDefault();
+        removePinDigit();
+        return;
+      }
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        toggleSentinel();
+        return;
+      }
+    }
+
+    // 2. Secret passcode 'admin' key tracking
+    typed += e.key.toLowerCase();
+    if (typed.length > 20) typed = typed.slice(-20);
+    if (typed.endsWith('admin')) {
+      typed = '';
+      toggleSentinel();
+      return;
+    }
+
+    // Existing keyboard navigation triggers
     const cur = parseInt(body.dataset.stage || '0', 10);
     if (e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); goToScene(cur + 1); }
     if (e.key === 'ArrowUp'   || e.key === 'PageUp')   { e.preventDefault(); goToScene(cur - 1); }
@@ -245,4 +472,21 @@
       e.preventDefault(); toggleLight();
     }
   });
+
+  // Mobile long press trigger (5 seconds on brand logo)
+  const navBrand = document.querySelector('.nav__brand');
+  if (navBrand) {
+    let pressTimer;
+    const startPress = () => {
+      pressTimer = setTimeout(() => {
+        toggleSentinel();
+      }, 5000);
+    };
+    const endPress = () => {
+      clearTimeout(pressTimer);
+    };
+    navBrand.addEventListener('touchstart', startPress, { passive: true });
+    navBrand.addEventListener('touchend', endPress, { passive: true });
+    navBrand.addEventListener('touchcancel', endPress, { passive: true });
+  }
 })();

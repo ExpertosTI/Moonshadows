@@ -78,6 +78,18 @@
     overflow-x: hidden;
     cursor: none;
   }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
   @media (hover: none), (pointer: coarse) { body { cursor: auto; } }
   h1, h2, h3, h4 {
     font-family: var(--font-serif);
@@ -1089,7 +1101,8 @@
   .scene--contact .contact__mark,
   .scene--contact .contact__quote,
   .scene--contact .magnet,
-  .scene--contact .contact-chips {
+  .scene--contact .contact-chips,
+  .scene--contact .contact__desc {
     opacity: 0;
     transform: translateY(18px);
     transition: opacity 700ms var(--ease-io), transform 700ms var(--ease-io);
@@ -1098,6 +1111,7 @@
   body[data-stage="3"] .scene--contact .contact__quote  { opacity: 1; transform: none; transition-delay: 220ms; }
   body[data-stage="3"] .scene--contact .magnet          { opacity: 1; transform: none; transition-delay: 360ms; }
   body[data-stage="3"] .scene--contact .contact-chips   { opacity: 1; transform: none; transition-delay: 500ms; }
+  body[data-stage="3"] .scene--contact .contact__desc    { opacity: 0.75; transform: none; transition-delay: 640ms; }
 
   /* Light off — dimmed look (toggle behavior) */
   body:not(.is-lit) .scene--contact { background: var(--night); }
@@ -1165,6 +1179,16 @@
     max-width: 880px;
     width: 100%;
     margin: 3rem auto 2.5rem;
+  }
+  .contact__desc {
+    max-width: 580px;
+    margin: 0 auto 3rem;
+    font-size: .88rem;
+    color: var(--muted);
+    line-height: 1.6;
+    text-align: center;
+    padding: 0 1rem;
+    opacity: 0.75;
   }
   .chip {
     display: grid;
@@ -1441,3 +1465,230 @@
     body::after, .torch { display: none !important; }
   }
 }
+
+/* ============================================================
+   SENTINEL CONSOLE — Secure Glassmorphic Metrics
+   ============================================================ */
+.sentinel {
+  position: fixed; inset: 0; z-index: 9999;
+  display: grid; place-items: center;
+  background: rgba(5, 5, 11, 0.45);
+  backdrop-filter: blur(20px);
+  opacity: 0; pointer-events: none;
+  transition: opacity 500ms var(--ease);
+}
+.sentinel.is-active {
+  opacity: 1; pointer-events: auto;
+}
+.sentinel__glow {
+  position: absolute; inset: 0;
+  background: radial-gradient(800px 500px at 50% 50%, color-mix(in oklch, var(--gold) 5%, transparent), transparent 70%);
+  pointer-events: none;
+}
+.sentinel__window {
+  position: relative; max-width: 900px; width: 90%;
+  background: rgba(15, 14, 27, 0.85);
+  border: 1px solid color-mix(in oklch, var(--gold) 15%, transparent);
+  border-radius: 1.5rem;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+  transform: scale(0.94) translateY(20px);
+  transition: transform 500ms var(--ease-spring);
+}
+.sentinel.is-active .sentinel__window {
+  transform: scale(1) translateY(0);
+}
+.sentinel__header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid color-mix(in oklch, var(--cream) 6%, transparent);
+}
+.sentinel__brand {
+  display: flex; align-items: center; gap: .75rem;
+}
+.sentinel__led {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 10px var(--gold);
+  animation: pulseLed 1.5s infinite alternate var(--ease-io);
+}
+@keyframes pulseLed {
+  0% { opacity: 0.3; filter: brightness(0.6); }
+  100% { opacity: 1; filter: brightness(1.2); }
+}
+.sentinel__brand h2 {
+  font-family: var(--font-sans); font-weight: 700; font-size: 1rem;
+  letter-spacing: 0.15em; color: var(--cream); margin: 0;
+}
+.sentinel__sub {
+  font-size: .68rem; color: var(--muted); letter-spacing: 0.05em;
+  padding-left: .5rem; border-left: 1px solid var(--muted-2);
+}
+.sentinel__close {
+  font-size: 1.8rem; line-height: 1; color: var(--muted);
+  transition: color var(--d-fast) var(--ease), transform var(--d-fast) var(--ease);
+}
+.sentinel__close:hover { color: var(--gold-lt); transform: scale(1.1); }
+
+.sentinel__content { padding: 2rem; }
+.sentinel__grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+.sentinel__card {
+  background: rgba(8, 7, 15, 0.4);
+  border: 1px solid color-mix(in oklch, var(--cream) 4%, transparent);
+  border-radius: 1rem; padding: 1.25rem;
+  display: flex; flex-direction: column; gap: 1rem;
+}
+.sentinel__card h3 {
+  font-family: var(--font-sans); font-size: .75rem; font-weight: 600;
+  color: var(--gold-lt); letter-spacing: 0.05em; text-transform: uppercase;
+}
+.sentinel__card-inner { display: flex; flex-direction: column; gap: .75rem; }
+.sentinel__stat {
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 1px dashed color-mix(in oklch, var(--muted) 20%, transparent);
+  padding-bottom: .4rem;
+}
+.sentinel__stat-label { font-size: .78rem; color: var(--muted); }
+.sentinel__stat-val { font-size: .95rem; font-weight: 600; color: var(--cream); }
+
+/* Charts */
+.sentinel__chart { margin-top: auto; padding-top: 1rem; }
+.sentinel__svg-bar { width: 100%; height: 60px; overflow: visible; }
+.sentinel__svg-bar rect {
+  transform-origin: bottom;
+  transition: height 1s var(--ease);
+}
+.sentinel__chart-labels {
+  display: flex; justify-content: space-between;
+  font-size: .65rem; color: var(--muted); padding: .25rem .5rem 0;
+}
+.sentinel__bar-group { display: flex; flex-direction: column; gap: .25rem; }
+.sentinel__bar-lbl { font-size: .68rem; color: var(--muted); }
+.sentinel__bar-outer {
+  height: 6px; background: var(--night-3); border-radius: 3px; overflow: hidden;
+}
+.sentinel__bar-fill {
+  height: 100%; background: linear-gradient(90deg, var(--gold-dp), var(--gold-lt));
+  width: 0; transition: width 1s var(--ease);
+}
+.sentinel__bar-val { font-size: .68rem; color: var(--cream); text-align: right; }
+
+.sentinel__radial {
+  position: relative; width: 80px; height: 80px; margin: 1rem auto 0;
+}
+.sentinel__svg-radial { transform: rotate(-90deg); width: 100%; height: 100%; }
+.radial-fill {
+  transition: stroke-dasharray 1s var(--ease);
+}
+.sentinel__radial-label {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  font-size: .9rem; font-weight: 700; color: var(--cream);
+}
+
+.sentinel__footer {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.25rem 2rem;
+  background: rgba(5, 5, 11, 0.4);
+  border-top: 1px solid color-mix(in oklch, var(--cream) 6%, transparent);
+}
+.sentinel__btn {
+  padding: .5rem 1rem; border-radius: .5rem; font-size: .7rem;
+  font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+  transition: all var(--d-fast) var(--ease);
+}
+.sentinel__btn--reset {
+  border: 1px solid color-mix(in oklch, var(--gold) 30%, transparent);
+  color: var(--gold-lt);
+}
+.sentinel__btn--reset:hover {
+  background: color-mix(in oklch, var(--gold) 15%, transparent);
+  box-shadow: 0 0 15px rgba(232, 163, 23, 0.2);
+}
+.sentinel__status-text { font-size: .62rem; color: var(--muted); }
+
+/* ============================================================
+   SECURE PIN PAD — Glassmorphic Security Overlay
+   ============================================================ */
+.sentinel__pinpad {
+  position: absolute; inset: 0; z-index: 100;
+  display: grid; place-items: center;
+  background: rgba(10, 9, 22, 0.96);
+  backdrop-filter: blur(25px);
+  transition: opacity 400ms var(--ease);
+}
+.sentinel.is-authenticated .sentinel__pinpad {
+  opacity: 0; pointer-events: none;
+}
+.sentinel__pinpad-window {
+  width: 320px; text-align: center;
+  display: flex; flex-direction: column; gap: 1.5rem;
+  padding: 2rem;
+}
+.sentinel__pinpad-header h3 {
+  font-family: var(--font-sans); font-size: 1rem; font-weight: 700;
+  color: var(--cream); letter-spacing: 0.1em; text-transform: uppercase;
+  margin: 0 0 0.25rem 0;
+}
+.sentinel__pinpad-header p {
+  font-size: 0.72rem; color: var(--muted); margin: 0;
+}
+.sentinel__pinpad-display {
+  display: flex; justify-content: center; gap: 0.75rem;
+  margin: 1rem 0;
+}
+.pin-dot {
+  width: 12px; height: 12px; border-radius: 50%;
+  border: 1px solid color-mix(in oklch, var(--gold) 40%, transparent);
+  transition: all var(--d-fast) var(--ease);
+}
+.pin-dot.is-active {
+  background: var(--gold);
+  box-shadow: 0 0 8px var(--gold);
+}
+.sentinel__pinpad.is-error .pin-dot {
+  border-color: #ef4444;
+  background: #ef4444;
+  box-shadow: 0 0 10px #ef4444;
+}
+.sentinel__pinpad.is-error {
+  animation: sentinelShake 0.4s var(--ease);
+}
+@keyframes sentinelShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+.sentinel__pinpad-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem; max-width: 240px; margin: 0 auto;
+}
+.pin-btn {
+  width: 60px; height: 60px; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: var(--font-sans); font-size: 1.25rem; font-weight: 500;
+  color: var(--cream); display: grid; place-items: center;
+  transition: all var(--d-fast) var(--ease);
+  cursor: pointer;
+}
+.pin-btn:hover {
+  background: rgba(232, 163, 23, 0.1);
+  border-color: var(--gold);
+  color: var(--gold-lt);
+  box-shadow: 0 0 15px rgba(232, 163, 23, 0.15);
+}
+.pin-btn:active { transform: scale(0.95); }
+.pin-btn--clear, .pin-btn--back {
+  font-size: 0.9rem; color: var(--muted);
+}
+.sentinel__pinpad-cancel {
+  background: none; border: none; color: var(--muted);
+  font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em;
+  cursor: pointer; transition: color var(--d-fast) var(--ease);
+  margin-top: 0.5rem;
+}
+.sentinel__pinpad-cancel:hover { color: var(--gold-lt); }
+
