@@ -1,5 +1,5 @@
 # ── Moonshadows — Docker Swarm + Traefik ─────────────────────
-#  Stack name: moonshadows  ·  Domain: ${DOMAIN:-moonshadows.do}
+#  Stack name: moonshadows  ·  Domain: ${DOMAIN:-moonshadowspro.com}
 #  Network:    RenaceNet (external overlay, see renace-deploy skill)
 #  Entrypoints: web (:80), websecure (:443)
 #  Cert resolver: letsencryptresolver
@@ -37,12 +37,12 @@ services:
         - traefik.constraint-label=traefik-public
 
         # ── HTTP → HTTPS redirect ───────────────────────────────
-        - traefik.http.routers.moonshadows-${STACK_NAME:-prod}-http.rule=Host(`${DOMAIN:-moonshadows.do}`) || Host(`www.${DOMAIN:-moonshadows.do}`)
+        - traefik.http.routers.moonshadows-${STACK_NAME:-prod}-http.rule=Host(`${DOMAIN:-moonshadowspro.com}`) || Host(`www.${DOMAIN:-moonshadowspro.com}`)
         - traefik.http.routers.moonshadows-${STACK_NAME:-prod}-http.entrypoints=web
         - traefik.http.routers.moonshadows-${STACK_NAME:-prod}-http.middlewares=moonshadows-${STACK_NAME:-prod}-redirect-https
 
         # ── HTTPS canonical (apex) ──────────────────────────────
-        - traefik.http.routers.moonshadows-${STACK_NAME:-prod}.rule=Host(`${DOMAIN:-moonshadows.do}`)
+        - traefik.http.routers.moonshadows-${STACK_NAME:-prod}.rule=Host(`${DOMAIN:-moonshadowspro.com}`)
         - traefik.http.routers.moonshadows-${STACK_NAME:-prod}.entrypoints=websecure
         - traefik.http.routers.moonshadows-${STACK_NAME:-prod}.tls=true
         - traefik.http.routers.moonshadows-${STACK_NAME:-prod}.tls.certresolver=letsencryptresolver
@@ -50,7 +50,7 @@ services:
         - traefik.http.routers.moonshadows-${STACK_NAME:-prod}.middlewares=moonshadows-${STACK_NAME:-prod}-security
 
         # ── HTTPS www → apex redirect ───────────────────────────
-        - traefik.http.routers.moonshadows-${STACK_NAME:-prod}-www.rule=Host(`www.${DOMAIN:-moonshadows.do}`)
+        - traefik.http.routers.moonshadows-${STACK_NAME:-prod}-www.rule=Host(`www.${DOMAIN:-moonshadowspro.com}`)
         - traefik.http.routers.moonshadows-${STACK_NAME:-prod}-www.entrypoints=websecure
         - traefik.http.routers.moonshadows-${STACK_NAME:-prod}-www.tls=true
         - traefik.http.routers.moonshadows-${STACK_NAME:-prod}-www.tls.certresolver=letsencryptresolver

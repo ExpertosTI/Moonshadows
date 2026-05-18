@@ -19,12 +19,29 @@
   const Sentinel = {
     getStats() {
       const defaultStats = {
-        clicks: { whatsapp: 0, cta: 0, services: 0 },
+        session_id: '',
+        clicks: { whatsapp: 0, cta: 0, services: 0, email: 0, themeToggle: 0 },
         time: { scene_0: 0, scene_1: 0, scene_2: 0, scene_3: 0, total: 0 },
-        maxScroll: 0
+        maxScroll: 0,
+        nodeOpenDuration: { node_0: 0, node_1: 0, node_2: 0, node_3: 0 },
+        heatpoints: [],
+        device: {
+          screen: `${innerWidth}x${innerHeight}`,
+          ua: navigator.userAgent.substring(0, 80),
+          lang: navigator.language
+        },
+        activeTime: 0,
+        idleTime: 0
       };
       try {
-        return JSON.parse(localStorage.getItem('ms_sentinel_stats')) || defaultStats;
+        const stats = JSON.parse(localStorage.getItem('ms_sentinel_stats')) || defaultStats;
+        return {
+          ...defaultStats,
+          ...stats,
+          clicks: { ...defaultStats.clicks, ...(stats.clicks || {}) },
+          time: { ...defaultStats.time, ...(stats.time || {}) },
+          nodeOpenDuration: { ...defaultStats.nodeOpenDuration, ...(stats.nodeOpenDuration || {}) }
+        };
       } catch {
         return defaultStats;
       }
@@ -36,26 +53,108 @@
       const stats = this.getStats();
       if (stats.clicks[category] !== undefined) {
         stats.clicks[category]++;
-        this.saveStats(stats);
+      } else {
+        stats.clicks[category] = 1;
       }
+      this.saveStats(stats);
+      this.sync();
     },
-    trackTime(scene, seconds) {
+    trackTime(scene, seconds, isIdle) {
       const stats = this.getStats();
       const key = `scene_${scene}`;
       if (stats.time[key] !== undefined) {
         stats.time[key] += seconds;
         stats.time.total += seconds;
-        this.saveStats(stats);
       }
+      if (isIdle) {
+        stats.idleTime = (stats.idleTime || 0) + seconds;
+      } else {
+        stats.activeTime = (stats.activeTime || 0) + seconds;
+      }
+      
+      const openNodeEl = document.querySelector('.node.is-open');
+      if (openNodeEl) {
+        const nodeId = openNodeEl.dataset.node || '0';
+        const nodeKey = `node_${nodeId}`;
+        if (!stats.nodeOpenDuration) stats.nodeOpenDuration = {};
+        stats.nodeOpenDuration[nodeKey] = (stats.nodeOpenDuration[nodeKey] || 0) + seconds;
+      }
+      
+      this.saveStats(stats);
     },
     trackScroll(sceneNum) {
       const stats = this.getStats();
       if (sceneNum > stats.maxScroll) {
         stats.maxScroll = sceneNum;
         this.saveStats(stats);
+        this.sync();
+      }
+    },
+    trackHeatpoint(x, y, tag) {
+      const stats = this.getStats();
+      if (!stats.heatpoints) stats.heatpoints = [];
+      stats.heatpoints.push({ x, y, tag, time: Date.now() });
+      if (stats.heatpoints.length > 15) stats.heatpoints.shift();
+      this.saveStats(stats);
+      this.sync();
+    },
+    async init() {
+      const stats = this.getStats();
+      if (!stats.session_id) {
+        stats.session_id = 'ms_' + Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
+        this.saveStats(stats);
+      }
+      try {
+        await fetch('/api/insforge/leads', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Prefer': 'resolution=ignore-duplicates'
+          },
+          body: JSON.stringify({
+            project_id: 'moonshadows',
+            channel: 'telemetry',
+            contact_value: `Session:${stats.session_id}`,
+            metadata: stats,
+            created_at: new Date().toISOString()
+          })
+        });
+      } catch (err) {
+        console.warn('Insforge lead init warning:', err);
+      }
+      
+      setInterval(() => {
+        if (document.visibilityState === 'visible') {
+          this.sync();
+        }
+      }, 10000);
+    },
+    async sync() {
+      const stats = this.getStats();
+      try {
+        await fetch(`/api/insforge/leads?contact_value=eq.Session:${stats.session_id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            metadata: stats
+          })
+        });
+      } catch (err) {
+        console.warn('Insforge sync error:', err);
       }
     }
   };
+
+  Sentinel.init();
+
+  let lastActivityTime = Date.now();
+  const recordActivity = () => { lastActivityTime = Date.now(); };
+  addEventListener('pointermove', recordActivity, { passive: true });
+  addEventListener('keydown', recordActivity, { passive: true });
+  addEventListener('scroll', recordActivity, { passive: true });
+  addEventListener('click', recordActivity, { passive: true });
 
   /* ── Cursor / torch tracking (desktop only) ─────────────── */
   if (!isTouch) {
@@ -280,19 +379,28 @@
   /* ── Sentinel Dwell Time Clock (Passive every second) ──── */
   setInterval(() => {
     const activeStage = body.dataset.stage || '0';
-    Sentinel.trackTime(activeStage, 1);
+    const isIdle = (Date.now() - lastActivityTime) > 5000;
+    Sentinel.trackTime(activeStage, 1, isIdle);
   }, 1000);
 
   /* ── Sentinel Click Event Capture ───────────────────────── */
   addEventListener('click', (e) => {
     const target = e.target;
     if (!target) return;
+    
+    // Capture heatpoints
+    Sentinel.trackHeatpoint(e.clientX, e.clientY, target.tagName.toLowerCase());
+    
     if (target.closest('a[href*="wa.me"]')) {
       Sentinel.trackClick('whatsapp');
     } else if (target.closest('.nav__brand, .nav__cta, .magnet, .chip')) {
       Sentinel.trackClick('cta');
     } else if (target.closest('.node__head')) {
       Sentinel.trackClick('services');
+    } else if (target.closest('a[href^="mailto:"]')) {
+      Sentinel.trackClick('email');
+    } else if (target.closest('#light-toggle')) {
+      Sentinel.trackClick('themeToggle');
     }
   }, { passive: true });
 
@@ -301,7 +409,96 @@
   const sentinelClose = document.getElementById('sentinel-close');
   const sentinelReset = document.getElementById('sentinel-reset');
 
+  let activeTab = 'session'; // 'session' or 'global'
+
+  const fetchAndRenderGlobal = async () => {
+    try {
+      const res = await fetch('/api/insforge/leads?project_id=eq.moonshadows&limit=200');
+      if (!res.ok) throw new Error('Insforge HTTP error');
+      const leads = await res.json();
+      
+      if (!leads || leads.length === 0) {
+        const coordsEl = document.getElementById('sentinel-heat-coords');
+        if (coordsEl) coordsEl.textContent = 'sin datos registrados';
+        return;
+      }
+      
+      const global = {
+        clicks: { whatsapp: 0, cta: 0, services: 0 },
+        time: { scene_0: 0, scene_1: 0, scene_2: 0, scene_3: 0, total: 0 },
+        maxScroll: 0,
+        activeTime: 0,
+        idleTime: 0,
+        totalSessions: leads.length,
+        heatpointsCount: 0
+      };
+      
+      leads.forEach(lead => {
+        const meta = lead.metadata || {};
+        if (meta.clicks) {
+          global.clicks.whatsapp += (meta.clicks.whatsapp || 0);
+          global.clicks.cta += (meta.clicks.cta || 0);
+          global.clicks.services += (meta.clicks.services || 0);
+        }
+        if (meta.time) {
+          global.time.scene_0 += (meta.time.scene_0 || 0);
+          global.time.scene_1 += (meta.time.scene_1 || 0);
+          global.time.scene_2 += (meta.time.scene_2 || 0);
+          global.time.scene_3 += (meta.time.scene_3 || 0);
+          global.time.total += (meta.time.total || 0);
+        }
+        if (meta.maxScroll > global.maxScroll) {
+          global.maxScroll = meta.maxScroll;
+        }
+        global.activeTime += (meta.activeTime || 0);
+        global.idleTime += (meta.idleTime || 0);
+        if (meta.heatpoints) {
+          global.heatpointsCount += meta.heatpoints.length;
+        }
+      });
+      
+      document.getElementById('sentinel-stat-wa').textContent = global.clicks.whatsapp;
+      document.getElementById('sentinel-stat-cta').textContent = global.clicks.cta;
+      document.getElementById('sentinel-stat-services').textContent = global.clicks.services;
+      document.getElementById('sentinel-stat-total').textContent = `${global.time.total}s`;
+      document.getElementById('sentinel-stat-scroll').textContent = `Scene ${global.maxScroll}`;
+      
+      const maxTime = Math.max(global.time.scene_0, global.time.scene_1, global.time.scene_2, global.time.scene_3, 1);
+      for (let i = 0; i <= 3; i++) {
+        const sec = global.time[`scene_${i}`];
+        const pct = (sec / maxTime) * 100;
+        const fillEl = document.getElementById(`sentinel-bar-s${i}`);
+        const valEl = document.getElementById(`sentinel-val-s${i}`);
+        if (fillEl) fillEl.style.width = `${pct}%`;
+        if (valEl) valEl.textContent = `${sec}s`;
+      }
+      
+      const depthPct = (global.maxScroll / 3) * 100;
+      const depthEl = document.getElementById('sentinel-radial-depth');
+      const lblEl = document.getElementById('sentinel-radial-lbl');
+      if (depthEl) depthEl.setAttribute('stroke-dasharray', `${depthPct}, 100`);
+      if (lblEl) lblEl.textContent = `${Math.round(depthPct)}%`;
+      
+      document.getElementById('sentinel-stat-device').textContent = `${global.totalSessions} Visitas`;
+      document.getElementById('sentinel-stat-active').textContent = `${global.activeTime}s`;
+      document.getElementById('sentinel-stat-last-click').textContent = 'Global';
+      
+      const coordsEl = document.getElementById('sentinel-heat-coords');
+      if (coordsEl) coordsEl.textContent = `${global.heatpointsCount} clicks registrados globalmente`;
+      
+    } catch (err) {
+      console.error(err);
+      const coordsEl = document.getElementById('sentinel-heat-coords');
+      if (coordsEl) coordsEl.textContent = 'error cargando datos';
+    }
+  };
+
   const renderSentinel = () => {
+    if (activeTab === 'global') {
+      fetchAndRenderGlobal();
+      return;
+    }
+
     const stats = Sentinel.getStats();
 
     // 1. Text values
@@ -347,7 +544,56 @@
     const lblEl = document.getElementById('sentinel-radial-lbl');
     if (depthEl) depthEl.setAttribute('stroke-dasharray', `${depthPct}, 100`);
     if (lblEl) lblEl.textContent = `${Math.round(depthPct)}%`;
+
+    // 5. Card 4: Devices & Heatmap
+    const deviceValEl = document.getElementById('sentinel-stat-device');
+    const activeValEl = document.getElementById('sentinel-stat-active');
+    const lastClickValEl = document.getElementById('sentinel-stat-last-click');
+    const heatCoordsEl = document.getElementById('sentinel-heat-coords');
+
+    if (deviceValEl) {
+      const isMobile = matchMedia('(hover: none), (pointer: coarse)').matches;
+      deviceValEl.textContent = isMobile ? 'Móvil (Touch)' : 'Escritorio';
+    }
+    if (activeValEl) {
+      activeValEl.textContent = `${stats.activeTime || 0}s`;
+    }
+    if (lastClickValEl) {
+      if (stats.heatpoints && stats.heatpoints.length > 0) {
+        const last = stats.heatpoints[stats.heatpoints.length - 1];
+        lastClickValEl.textContent = `<${last.tag}> (${last.x}, ${last.y})`;
+      } else {
+        lastClickValEl.textContent = 'Ninguno';
+      }
+    }
+    if (heatCoordsEl) {
+      if (stats.heatpoints && stats.heatpoints.length > 0) {
+        heatCoordsEl.innerHTML = stats.heatpoints
+          .map(hp => `<span style="background: rgba(212,175,55,0.15); padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(212,175,55,0.3);">${hp.x},${hp.y}</span>`)
+          .join(' ');
+      } else {
+        heatCoordsEl.textContent = 'esperando interacción...';
+      }
+    }
   };
+
+  const tabSessionBtn = document.getElementById('sentinel-tab-session');
+  const tabGlobalBtn = document.getElementById('sentinel-tab-global');
+
+  if (tabSessionBtn && tabGlobalBtn) {
+    tabSessionBtn.addEventListener('click', () => {
+      activeTab = 'session';
+      tabSessionBtn.classList.add('is-active');
+      tabGlobalBtn.classList.remove('is-active');
+      renderSentinel();
+    });
+    tabGlobalBtn.addEventListener('click', () => {
+      activeTab = 'global';
+      tabGlobalBtn.classList.add('is-active');
+      tabSessionBtn.classList.remove('is-active');
+      renderSentinel();
+    });
+  }
 
   /* ── Sentinel PIN Verification & Dashboard Toggle ───────── */
   const pinPadEl = document.getElementById('sentinel-pinpad');

@@ -616,6 +616,11 @@
         <button class="sentinel__close" id="sentinel-close" type="button" aria-label="Cerrar Consola">&times;</button>
       </header>
 
+      <div class="sentinel__tabs">
+        <button type="button" class="sentinel__tab is-active" id="sentinel-tab-session">Sesión Actual</button>
+        <button type="button" class="sentinel__tab" id="sentinel-tab-global">Histórico Global</button>
+      </div>
+
       <div class="sentinel__content">
         <!-- Stats Grid -->
         <div class="sentinel__grid">
@@ -698,6 +703,32 @@
                 <path class="radial-fill" id="sentinel-radial-depth" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="var(--gold)" stroke-width="2.5" stroke-linecap="round" />
               </svg>
               <div class="sentinel__radial-label" id="sentinel-radial-lbl">0%</div>
+            </div>
+          </div>
+
+          <!-- Card 4: Dispositivos & Heatmap -->
+          <div class="sentinel__card">
+            <h3>Dispositivos & Heatmap</h3>
+            <div class="sentinel__card-inner">
+              <div class="sentinel__stat">
+                <span class="sentinel__stat-label">Dispositivo</span>
+                <span class="sentinel__stat-val" id="sentinel-stat-device">N/A</span>
+              </div>
+              <div class="sentinel__stat">
+                <span class="sentinel__stat-label">Tiempo Activo</span>
+                <span class="sentinel__stat-val" id="sentinel-stat-active">0s</span>
+              </div>
+              <div class="sentinel__stat">
+                <span class="sentinel__stat-label">Último Click</span>
+                <span class="sentinel__stat-val" id="sentinel-stat-last-click">Ninguno</span>
+              </div>
+            </div>
+            <!-- Click heatmap coordinate tracker list -->
+            <div class="sentinel__heat-list" style="margin-top: 1rem; border-top: 1px solid color-mix(in oklch, var(--cream) 4%, transparent); padding-top: 0.75rem;">
+              <span class="sentinel__stat-label" style="display: block; margin-bottom: 0.25rem;">Coordenadas de Calor</span>
+              <div id="sentinel-heat-coords" style="font-size: 0.65rem; color: var(--gold-lt); font-family: monospace; display: flex; flex-wrap: wrap; gap: 0.5rem; max-height: 40px; overflow-y: auto;">
+                esperando interacción...
+              </div>
             </div>
           </div>
         </div>

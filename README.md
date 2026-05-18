@@ -47,7 +47,7 @@ cd /opt/moonshadows
 ./moonshadows-web/deploy.sh
 
 # Variables opcionales:
-DOMAIN=moonshadows.do \
+ DOMAIN=moonshadowspro.com \
   STACK_NAME=moonshadows \
   ./moonshadows-web/deploy.sh
 ```
@@ -57,7 +57,7 @@ DOMAIN=moonshadows.do \
 ```bash
 docker stack services moonshadows
 docker service logs -f moonshadows_web
-curl -I https://moonshadows.do/healthz
+curl -I https://moonshadowspro.com/healthz
 ```
 
 ## DNS
@@ -65,8 +65,8 @@ curl -I https://moonshadows.do/healthz
 Apuntar al VPS:
 
 ```
-moonshadows.do      A   <VPS_IP>
-www.moonshadows.do  A   <VPS_IP>
+moonshadowspro.com      A   <VPS_IP>
+www.moonshadowspro.com  A   <VPS_IP>
 ```
 
 Traefik gestiona el certificado vía Let's Encrypt automáticamente.

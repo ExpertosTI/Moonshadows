@@ -1530,6 +1530,34 @@
 }
 .sentinel__close:hover { color: var(--gold-lt); transform: scale(1.1); }
 
+.sentinel__tabs {
+  display: flex;
+  background: rgba(8, 7, 15, 0.4);
+  border-bottom: 1px solid color-mix(in oklch, var(--cream) 6%, transparent);
+  padding: 0 2rem;
+  gap: 1rem;
+}
+.sentinel__tab {
+  padding: 0.85rem 1.25rem;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+  transition: all 0.25s var(--ease);
+  cursor: pointer;
+  background: transparent;
+  border-top: none; border-left: none; border-right: none;
+}
+.sentinel__tab:hover {
+  color: var(--cream);
+}
+.sentinel__tab.is-active {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+
 .sentinel__content { padding: 2rem; }
 .sentinel__grid {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
