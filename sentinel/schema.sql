@@ -440,9 +440,7 @@ GRANT INSERT ON TABLE sentinel_admin_audit TO anon;
 
 -- Grant select permissions on tables and views to both roles (filtered by RLS)
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO anon, authenticated;
-GRANT SELECT ON ALL VIEWS IN SCHEMA public TO anon, authenticated;
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO authenticated;
-GRANT ALL PRIVILEGES ON ALL VIEWS IN SCHEMA public TO authenticated;
 
 
 -- ============================================================
