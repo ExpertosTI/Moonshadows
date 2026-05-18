@@ -809,11 +809,11 @@
     },
 
     pinpadHTML: function () {
-      var keys = ['1','2','3','4','5','6','7','8','9','close','0','erase'];
+      var keys = ['1','2','3','4','5','6','7','8','9','A','0','erase'];
       var dots = '';
       for (var i = 0; i < CONFIG.pinLength; i++) dots += '<span class="snt-pinpad__dot"></span>';
       var grid = keys.map(function (k) {
-        var label = k === 'erase' ? '←' : (k === 'close' ? '✕' : k);
+        var label = k === 'erase' ? '←' : k;
         return '<button class="snt-pinpad__key" data-key="' + k + '" type="button">' + label + '</button>';
       }).join('');
       return '' +
@@ -965,23 +965,27 @@
 
     bindPinpad: function () {
       var self = this;
+      var scrim = this.root.querySelector('.snt-scrim');
+      if (scrim) {
+        scrim.addEventListener('click', function () { self.closeAll(); });
+      }
+
       var pad = this.root.querySelector('.snt-pinpad');
       pad.addEventListener('click', function (e) {
         var btn = e.target.closest('.snt-pinpad__key');
         if (!btn) return;
         var k = btn.dataset.key;
-        if (k === 'close') return self.closeAll();
         if (k === 'erase') { self.pinBuf = self.pinBuf.slice(0, -1); self.renderPin(); return; }
-        if (/^\d$/.test(k) && self.pinBuf.length < CONFIG.pinLength) {
-          self.pinBuf += k;
+        if (/^[0-9a-zA-Z]$/.test(k) && self.pinBuf.length < CONFIG.pinLength) {
+          self.pinBuf += k.toUpperCase();
           self.renderPin();
           if (self.pinBuf.length === CONFIG.pinLength) self.tryPin();
         }
       });
       document.addEventListener('keydown', function (e) {
         if (!self.root.classList.contains('is-pinpad')) return;
-        if (/^[0-9]$/.test(e.key) && self.pinBuf.length < CONFIG.pinLength) {
-          self.pinBuf += e.key;
+        if (/^[0-9a-zA-Z]$/.test(e.key) && self.pinBuf.length < CONFIG.pinLength) {
+          self.pinBuf += e.key.toUpperCase();
           self.renderPin();
           if (self.pinBuf.length === CONFIG.pinLength) self.tryPin();
         } else if (e.key === 'Backspace') {
