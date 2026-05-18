@@ -227,10 +227,15 @@
     enabled: function () { return ENABLED; },
 
     headers: function () {
+      var token = ANON_KEY;
+      try {
+        var localToken = localStorage.getItem('snt:admin_token');
+        if (localToken) token = localToken;
+      } catch (e) {}
       return {
         'Content-Type': 'application/json',
         'apikey': ANON_KEY,
-        'Authorization': 'Bearer ' + ANON_KEY,
+        'Authorization': 'Bearer ' + token,
         'Prefer': 'return=minimal'
       };
     },
