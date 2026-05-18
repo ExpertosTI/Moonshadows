@@ -76,6 +76,27 @@
     });
   }
 
+  /* ── Lamp beckoning — attract user after 4s of dark idle ── */
+  let lampBeckonTimer = null;
+  const startBeckon = () => {
+    clearTimeout(lampBeckonTimer);
+    lampBeckonTimer = setTimeout(() => {
+      if (!body.classList.contains('is-lit') && body.dataset.stage === '0') {
+        body.classList.add('lamp-beckoning');
+      }
+    }, 4000);
+  };
+  const stopBeckon = () => {
+    clearTimeout(lampBeckonTimer);
+    body.classList.remove('lamp-beckoning');
+  };
+  // Remove once user interacts with lamp
+  const originalToggleLight = toggleLight;
+  document.addEventListener('DOMContentLoaded', startBeckon);
+  if (document.readyState !== 'loading') startBeckon();
+  igniteScene && igniteScene.addEventListener('click', stopBeckon);
+  lightToggle && lightToggle.addEventListener('click', stopBeckon);
+
   /* Nav lamp button — works from any scene */
   if (lightToggle) {
     lightToggle.addEventListener('click', (e) => {

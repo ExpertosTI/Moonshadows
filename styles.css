@@ -489,6 +489,36 @@
     50% { stroke-opacity: 1; stroke: var(--gold); }
   }
 
+  /* Lamp beckoning — visible call-to-action after 4s of dark idle */
+  body.lamp-beckoning:not(.is-lit) .lamp {
+    animation: lamp-beckon 2s var(--ease) infinite;
+  }
+  body.lamp-beckoning:not(.is-lit) .bulb-glow {
+    animation: bulb-glow-pulse 2s var(--ease) infinite !important;
+    opacity: 1 !important;
+  }
+  body.lamp-beckoning:not(.is-lit) .ignite__touch-hint {
+    display: inline-flex !important;
+    opacity: 1;
+    animation: hint-fade-in .8s var(--ease) forwards;
+  }
+  @keyframes lamp-beckon {
+    0%, 100% { filter: drop-shadow(0 0 0px transparent); }
+    50% { filter: drop-shadow(0 0 18px color-mix(in oklch, var(--gold) 80%, transparent)); }
+  }
+  @keyframes bulb-glow-pulse {
+    0%, 100% { opacity: .15; }
+    50% { opacity: .6; }
+  }
+  @keyframes hint-fade-in {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    body.lamp-beckoning:not(.is-lit) .lamp { animation: none; }
+    body.lamp-beckoning:not(.is-lit) .bulb-glow { animation: none !important; }
+  }
+
   /* ── SCENE 1, 2, 3 — hub style ─────────────── */
   .scene--hub {
     padding-top: clamp(6rem, 11vh, 8.5rem);
@@ -1440,4 +1470,20 @@
     body { cursor: auto; }
     body::after, .torch { display: none !important; }
   }
+}
+
+/* ============================================================
+   .sr-only — Screen-reader-only utility (SEO H1, extra context).
+   Visually hidden but read by assistive tech and indexed by Google.
+   Isolated; does not touch any other layer or token.
+   ============================================================ */
+.sr-only {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }

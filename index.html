@@ -1,18 +1,43 @@
 <!doctype html>
-<html lang="es">
+<html lang="es-DO">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#08070F" />
   <meta name="color-scheme" content="dark" />
 
-  <title>Moonshadows — Enciende la luz</title>
-  <meta name="description" content="Consultoría estratégica para transformar la tensión entre potencial y ejecución. Labor omnia vincit." />
+  <!-- ── SEO Primary ──────────────────────────────────────── -->
+  <title>Consultoría Estratégica en República Dominicana · Moonshadows</title>
+  <meta name="description" content="Consultoría estratégica en República Dominicana. Finanzas, procesos, marca e implementación para empresas que quieren crecer de verdad. Conversemos." />
+  <meta name="keywords" content="consultoría estratégica República Dominicana, consultoría empresarial RD, planeación financiera, gobierno corporativo, estrategia de marca, implementación PMO, Moonshadows" />
+  <meta name="author" content="Moonshadows EIRL" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="googlebot" content="index, follow" />
+  <meta name="geo.region" content="DO" />
+  <meta name="geo.placename" content="Santo Domingo, República Dominicana" />
+  <link rel="canonical" href="https://moonshadowspro.com/" />
 
+  <!-- ── Open Graph ───────────────────────────────────────── -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Moonshadows — Enciende la luz" />
-  <meta property="og:description" content="Consultoría estratégica · República Dominicana" />
-  <meta property="og:image" content="/assets/logo-white.png" />
+  <meta property="og:site_name" content="Moonshadows" />
+  <meta property="og:title" content="Consultoría Estratégica en República Dominicana · Moonshadows" />
+  <meta property="og:description" content="Finanzas, procesos, marca e implementación para empresas en República Dominicana. Agenda una conversación." />
+  <meta property="og:url" content="https://moonshadowspro.com/" />
+  <meta property="og:image" content="https://moonshadowspro.com/assets/logo-white.png" />
+  <meta property="og:image:secure_url" content="https://moonshadowspro.com/assets/logo-white.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Moonshadows — Consultoría estratégica República Dominicana" />
+  <meta property="og:locale" content="es_DO" />
+  <meta property="og:locale:alternate" content="es_ES" />
+
+  <!-- ── Twitter Card ─────────────────────────────────────── -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Consultoría Estratégica en RD · Moonshadows" />
+  <meta name="twitter:description" content="Finanzas, procesos, marca e implementación para empresas en República Dominicana." />
+  <meta name="twitter:image" content="https://moonshadowspro.com/assets/logo-white.png" />
+  <meta name="twitter:image:alt" content="Moonshadows — Consultoría estratégica RD" />
 
   <link rel="icon" type="image/png" href="/assets/logo-icon.png" />
   <link rel="apple-touch-icon" href="/assets/logo-icon.png" />
@@ -24,6 +49,12 @@
   <link rel="preload" as="image" href="/assets/logo-full.png" />
   <link rel="preload" as="image" href="/assets/logo-icon.png" />
   <link rel="stylesheet" href="/styles.css?v=7.2" />
+
+  <!-- ── Sentinel telemetry + admin console (isolated, deferred) ── -->
+  <link rel="stylesheet" href="/sentinel.css?v=1.0" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="/sentinel.css?v=1.0" /></noscript>
+  <meta name="sentinel-endpoint" content="" />
+  <meta name="sentinel-anon-key" content="" />
 
   <!-- SVG icon sprite -->
   <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute; width:0; height:0;" aria-hidden="true">
@@ -161,14 +192,14 @@
   </aside>
 
   <header class="nav" id="nav">
-    <a class="nav__brand" href="#scene-0" aria-label="Moonshadows · Inicio">
-      <img src="/assets/logo-full.png" alt="Moonshadows · Labor omnia vincit" />
+    <a class="nav__brand" href="#scene-0" aria-label="Moonshadows · Consultoría Estratégica República Dominicana">
+      <img src="/assets/logo-full.png" alt="Moonshadows — Consultoría estratégica República Dominicana" width="200" height="48" />
     </a>
     <div class="nav__right">
       <button class="nav__light" id="light-toggle" type="button" aria-label="Apagar luz" title="Apagar / Encender">
         <svg aria-hidden="true"><use href="#icon-lamp"/></svg>
       </button>
-      <a class="nav__cta" href="https://wa.me/18299778571" target="_blank" rel="noopener noreferrer">
+      <a class="nav__cta" href="https://wa.me/18299778571" target="_blank" rel="noopener noreferrer" title="Contactar a Moonshadows por WhatsApp · Consultoría estratégica RD">
         <span>Consultar</span>
         <i aria-hidden="true">→</i>
       </a>
@@ -242,7 +273,8 @@
         </svg>
 
         <div class="ignite__copy">
-          <h1 class="ignite__title">Enciende<br>la luz<span class="ignite__dot">.</span></h1>
+          <h1 class="sr-only">Consultoría Estratégica para Empresas en República Dominicana</h1>
+          <p class="ignite__title" role="doc-subtitle">Enciende<br>la luz<span class="ignite__dot">.</span></p>
           <p class="ignite__touch-hint" aria-hidden="true">
             <span class="ignite__touch-ring"></span>
             <span>Toca para iluminar</span>
@@ -271,6 +303,11 @@
         </h2>
         <p class="hub__lede">
           Cuatro tensiones. Cuatro respuestas integradas. <em>Un solo sistema.</em>
+        </p>
+        <p class="sr-only">
+          Servicios de consultoría estratégica en República Dominicana: organización y gobierno corporativo,
+          planeación financiera y modelación de negocios, estrategia de marca y crecimiento digital,
+          implementación de capacidades operativas con PMO y gestión del cambio.
         </p>
       </div>
 
@@ -472,14 +509,20 @@
 
     <!-- ── SCENE 3 — CONTACT (always lit) ───────────── -->
     <section class="scene scene--contact" id="scene-3" data-scene="3">
-      <img class="contact__mark" src="/assets/logo-full.png" alt="Moonshadows" />
+      <img class="contact__mark" src="/assets/logo-full.png" alt="Moonshadows EIRL — Consultoría estratégica República Dominicana" width="240" height="60" />
 
       <h2 class="contact__quote">
         <em>"Labor omnia vincit."</em>
         <small>El trabajo logra todo.</small>
       </h2>
 
-      <a class="magnet" href="https://wa.me/18299778571" target="_blank" rel="noopener noreferrer">
+      <p class="sr-only">
+        Moonshadows es una firma de consultoría estratégica con sede en República Dominicana.
+        Trabajamos con empresas medianas y emprendimientos de alto potencial que necesitan
+        convertir sus estrategias en resultados medibles — en finanzas, procesos, marca y ejecución.
+      </p>
+
+      <a class="magnet" href="https://wa.me/18299778571" target="_blank" rel="noopener noreferrer" title="Conversemos por WhatsApp · Consultoría estratégica Moonshadows">
         <span class="magnet__inner">
           <span class="magnet__text">Conversemos</span>
           <span class="magnet__arrow" aria-hidden="true">
@@ -489,12 +532,12 @@
       </a>
 
       <div class="contact-chips">
-        <a class="chip" href="https://wa.me/18299778571" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp +1 829 977 8571">
+        <a class="chip" href="https://wa.me/18299778571" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Moonshadows +1 829 977 8571" title="Contactar a Moonshadows por WhatsApp">
           <span class="chip__ico" aria-hidden="true"><svg><use href="#icon-wa"/></svg></span>
           <span class="chip__label">WhatsApp</span>
           <span class="chip__val">+1 (829) 977 8571</span>
         </a>
-<a class="chip" href="mailto:carlosarturo@moonshadowspro.com" aria-label="Correo a carlosarturo@moonshadowspro.com">
+        <a class="chip" href="mailto:carlosarturo@moonshadowspro.com" aria-label="Correo a carlosarturo@moonshadowspro.com" title="Escribir a Moonshadows">
           <span class="chip__ico" aria-hidden="true"><svg><use href="#icon-mail"/></svg></span>
           <span class="chip__label">Correo</span>
           <span class="chip__val">carlosarturo@moonshadowspro.com</span>
@@ -515,5 +558,104 @@
   </main>
 
   <script type="module" src="/app.js?v=7.2"></script>
+
+  <!-- ── Sentinel telemetry + admin console (deferred, isolated) ──
+       Sends anonymous engagement data to Insforge. Console activates by
+       typing "admin" anywhere on the page or pressing Ctrl/Cmd+Shift+S,
+       then entering PIN 101284. -->
+  <script src="/sentinel.js?v=1.0" defer></script>
+
+  <!-- ── Schema.org · ProfessionalService ─────────────────── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "@id": "https://moonshadowspro.com/#business",
+    "name": "Moonshadows EIRL",
+    "alternateName": "Moonshadows",
+    "url": "https://moonshadowspro.com",
+    "logo": "https://moonshadowspro.com/assets/logo-full.png",
+    "image": "https://moonshadowspro.com/assets/logo-white.png",
+    "description": "Consultoría estratégica en finanzas, procesos, marca e implementación para empresas en República Dominicana.",
+    "slogan": "Labor omnia vincit — Enciende la luz.",
+    "telephone": "+18299778571",
+    "email": "carlosarturo@moonshadowspro.com",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "DO",
+      "addressRegion": "Distrito Nacional",
+      "addressLocality": "Santo Domingo"
+    },
+    "areaServed": [
+      { "@type": "Country",          "name": "República Dominicana" },
+      { "@type": "AdministrativeArea", "name": "Caribe" }
+    ],
+    "knowsLanguage": ["es", "en"],
+    "priceRange": "$$",
+    "serviceType": [
+      "Consultoría estratégica",
+      "Planeación financiera multianual",
+      "Modelación de escenarios y valoración",
+      "Gobierno corporativo y cumplimiento",
+      "Estrategia de marca y crecimiento digital",
+      "PMO e implementación",
+      "Gestión del cambio",
+      "Automatización con IA aplicada"
+    ],
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Servicios Moonshadows",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Organización, Procesos y Gobierno Corporativo",
+            "description": "Sistemas gobernables para escalar sin perder consistencia. Marco COSO, debida diligencia, métricas de desempeño."
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Finanzas, Negocio y Decisión",
+            "description": "Planeación financiera multianual, modelación de escenarios, planes de negocio y valoración."
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Marca, Contenido y Crecimiento",
+            "description": "Identidad de marca, SEO, conversión, Meta y Google Ads optimizados por ROAS."
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Capacidades e Implementación",
+            "description": "PMO, tableros ejecutivos, formación, automatización con IA aplicada y gestión del cambio."
+          }
+        }
+      ]
+    },
+    "sameAs": []
+  }
+  </script>
+
+  <!-- ── Schema.org · WebSite (search refinement) ─────────── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": "https://moonshadowspro.com/#website",
+    "url": "https://moonshadowspro.com/",
+    "name": "Moonshadows",
+    "description": "Consultoría estratégica en República Dominicana — Moonshadows EIRL",
+    "publisher": { "@id": "https://moonshadowspro.com/#business" },
+    "inLanguage": "es-DO"
+  }
+  </script>
 </body>
 </html>
