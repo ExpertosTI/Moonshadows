@@ -49,7 +49,7 @@
 
   <link rel="preload" as="image" href="/assets/logo-full.png" />
   <link rel="preload" as="image" href="/assets/logo-icon.png" />
-  <link rel="stylesheet" href="/styles.css?v=7.3" />
+  <link rel="stylesheet" href="/styles.css?v=7.4" />
 
   <!-- ── Sentinel telemetry + admin console (isolated, deferred) ── -->
   <link rel="stylesheet" href="/sentinel.css?v=7.5" media="print" onload="this.media='all'" />
@@ -199,6 +199,10 @@
     <div class="nav__right">
       <button class="nav__light" id="light-toggle" type="button" aria-label="Apagar luz" title="Apagar / Encender">
         <svg aria-hidden="true"><use href="#icon-lamp"/></svg>
+        <span class="nav__light-hint" id="light-hint">
+          <span class="nav__light-hint-finger">👆</span>
+          <span class="nav__light-hint-pulse"></span>
+        </span>
       </button>
       <a class="nav__cta" href="https://wa.me/18299778571" target="_blank" rel="noopener noreferrer" title="Contactar a Moonshadows por WhatsApp · Consultoría estratégica RD">
         <span>Consultar</span>
