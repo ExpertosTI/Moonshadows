@@ -720,3 +720,11 @@
     transition-duration: .01ms !important;
   }
 }
+
+/* ── Restore cursor when Sentinel console/pinpad is active ───── */
+.snt-root.is-active,
+.snt-root.is-active *,
+body.snt-open,
+body.snt-open * {
+  cursor: default !important;
+}
