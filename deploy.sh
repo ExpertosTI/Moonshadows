@@ -20,8 +20,10 @@ red()   { printf "\033[31m%s\033[0m\n" "$*" >&2; }
 cyan "── 1. Sync source ──────────────────────────────"
 if [ -d "$PROJECT_DIR/.git" ]; then
   cd "$PROJECT_DIR"
-  git fetch origin main
-  git reset --hard origin/main
+  CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+  cyan "Current branch detected: $CURRENT_BRANCH"
+  git fetch origin "$CURRENT_BRANCH"
+  git reset --hard "origin/$CURRENT_BRANCH"
 else
   git clone "$REPO_URL" "$PROJECT_DIR"
   cd "$PROJECT_DIR"
